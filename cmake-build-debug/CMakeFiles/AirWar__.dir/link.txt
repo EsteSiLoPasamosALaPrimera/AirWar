@@ -1,0 +1,1 @@
+/usr/bin/c++   -g   CMakeFiles/AirWar__.dir/main.cpp.o  -o AirWar__ 
