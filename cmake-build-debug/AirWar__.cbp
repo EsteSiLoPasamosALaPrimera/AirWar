@@ -86,6 +86,30 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/JetFighter.h">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Observer.cpp">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Observer.h">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/SimpleNode.h">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Stack.h">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Subject.cpp">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Subject.h">
+			<Option target="AirWar__"/>
+		</Unit>
 		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/main.cpp">
 			<Option target="AirWar__"/>
 		</Unit>

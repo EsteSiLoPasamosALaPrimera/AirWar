@@ -123,6 +123,87 @@ AirWar__/fast:
 	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/build
 .PHONY : AirWar__/fast
 
+JetFighter.o: JetFighter.cpp.o
+
+.PHONY : JetFighter.o
+
+# target to build an object file
+JetFighter.cpp.o:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/JetFighter.cpp.o
+.PHONY : JetFighter.cpp.o
+
+JetFighter.i: JetFighter.cpp.i
+
+.PHONY : JetFighter.i
+
+# target to preprocess a source file
+JetFighter.cpp.i:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/JetFighter.cpp.i
+.PHONY : JetFighter.cpp.i
+
+JetFighter.s: JetFighter.cpp.s
+
+.PHONY : JetFighter.s
+
+# target to generate assembly for a file
+JetFighter.cpp.s:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/JetFighter.cpp.s
+.PHONY : JetFighter.cpp.s
+
+Observer.o: Observer.cpp.o
+
+.PHONY : Observer.o
+
+# target to build an object file
+Observer.cpp.o:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Observer.cpp.o
+.PHONY : Observer.cpp.o
+
+Observer.i: Observer.cpp.i
+
+.PHONY : Observer.i
+
+# target to preprocess a source file
+Observer.cpp.i:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Observer.cpp.i
+.PHONY : Observer.cpp.i
+
+Observer.s: Observer.cpp.s
+
+.PHONY : Observer.s
+
+# target to generate assembly for a file
+Observer.cpp.s:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Observer.cpp.s
+.PHONY : Observer.cpp.s
+
+Subject.o: Subject.cpp.o
+
+.PHONY : Subject.o
+
+# target to build an object file
+Subject.cpp.o:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Subject.cpp.o
+.PHONY : Subject.cpp.o
+
+Subject.i: Subject.cpp.i
+
+.PHONY : Subject.i
+
+# target to preprocess a source file
+Subject.cpp.i:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Subject.cpp.i
+.PHONY : Subject.cpp.i
+
+Subject.s: Subject.cpp.s
+
+.PHONY : Subject.s
+
+# target to generate assembly for a file
+Subject.cpp.s:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Subject.cpp.s
+.PHONY : Subject.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +240,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... AirWar__"
+	@echo "... JetFighter.o"
+	@echo "... JetFighter.i"
+	@echo "... JetFighter.s"
+	@echo "... Observer.o"
+	@echo "... Observer.i"
+	@echo "... Observer.s"
+	@echo "... Subject.o"
+	@echo "... Subject.i"
+	@echo "... Subject.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

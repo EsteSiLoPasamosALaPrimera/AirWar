@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp
+JetFighter.h
+/home/jeanpaul/ClionProjects/AirWar++/JetFighter.h
+
+/home/jeanpaul/ClionProjects/AirWar++/JetFighter.h
+string
+-
+
 /home/jeanpaul/ClionProjects/AirWar++/main.cpp
 stdio.h
 -
