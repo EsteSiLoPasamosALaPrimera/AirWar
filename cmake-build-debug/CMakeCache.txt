@@ -15,6 +15,12 @@
 ########################
 
 //Value Computed by CMake
+AirWar_BINARY_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
+
+//Value Computed by CMake
+AirWar_SOURCE_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++
+
+//Value Computed by CMake
 AirWar___BINARY_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
 
 //Value Computed by CMake
@@ -127,7 +133,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=AirWar__
+CMAKE_PROJECT_NAME:STATIC=AirWar
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
