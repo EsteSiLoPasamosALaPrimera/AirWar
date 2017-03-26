@@ -3,7 +3,7 @@ project(AirWar__)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp JetFighter.cpp JetFighter.h SimpleNode.h Stack.h Observer.cpp Observer.h Subject.cpp Subject.h)
+set(SOURCE_FILES main.cpp JetFighter.cpp JetFighter.h SimpleNode.h Stack.h Observer.cpp Observer.h Subject.cpp Subject.h ListaPaginada.h Nodo.h)
 add_executable(AirWar__ ${SOURCE_FILES})
 
 INCLUDE_DIRECTORIES( allegro/5.0.11/include )

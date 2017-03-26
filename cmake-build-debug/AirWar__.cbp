@@ -92,6 +92,12 @@
 		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/JetFighter.h">
 			<Option target="AirWar__"/>
 		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/ListaPaginada.h">
+			<Option target="AirWar__"/>
+		</Unit>
+		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Nodo.h">
+			<Option target="AirWar__"/>
+		</Unit>
 		<Unit filename="/home/jeanpaul/ClionProjects/AirWar++/Observer.cpp">
 			<Option target="AirWar__"/>
 		</Unit>

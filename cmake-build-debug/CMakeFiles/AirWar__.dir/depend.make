@@ -4,5 +4,21 @@
 CMakeFiles/AirWar__.dir/JetFighter.cpp.o: ../JetFighter.cpp
 CMakeFiles/AirWar__.dir/JetFighter.cpp.o: ../JetFighter.h
 
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../ListaPaginada.h
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../Nodo.h
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../Observer.cpp
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../Observer.h
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../Subject.h
+
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../ListaPaginada.h
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../Nodo.h
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../Observer.h
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../Subject.cpp
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../Subject.h
+
+CMakeFiles/AirWar__.dir/main.cpp.o: ../ListaPaginada.h
+CMakeFiles/AirWar__.dir/main.cpp.o: ../Nodo.h
+CMakeFiles/AirWar__.dir/main.cpp.o: ../Observer.h
+CMakeFiles/AirWar__.dir/main.cpp.o: ../Subject.h
 CMakeFiles/AirWar__.dir/main.cpp.o: ../main.cpp
 
