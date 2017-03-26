@@ -8,7 +8,7 @@ Subject::Subject(int xPosition, int yPosition, int radius) {
 }
 
 Subject::~Subject(){
-
+    std::cout << "subject eliminado\n";
 }
 
 void Subject::notifyObserver() {
