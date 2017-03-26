@@ -1,7 +1,3 @@
-//
-// Created by alfredo on 21/03/17.
-//
-
 #ifndef AIRWAR_NODO_H
 #define AIRWAR_NODO_H
 

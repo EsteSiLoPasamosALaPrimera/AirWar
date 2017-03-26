@@ -1,5 +1,4 @@
 #include <iostream>
-<<<<<<< HEAD
 #include <typeinfo>
 #include "fstream"
 #include "allegro5/allegro.h"
@@ -275,10 +274,4 @@ int main(int argc, char* argv[]){
     al_destroy_display(display);
     al_destroy_event_queue(event_queue);*/
 
-=======
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
->>>>>>> 8c99ef948ed7c43be910cafcebfe29a7157d9ed9
-    return 0;
 }

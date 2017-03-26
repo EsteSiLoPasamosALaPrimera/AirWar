@@ -1,7 +1,3 @@
-//
-// Created by alfredo on 21/03/17.
-//
-
 #ifndef AIRWAR_LISTAPAGINADA_H
 #define AIRWAR_LISTAPAGINADA_H
 
@@ -82,7 +78,6 @@ void ListaPaginada<E>::insercionPaginada(int pPos, E pElement) {
     }if(pPos>=tam-1){
         insercionPaginadaAlFinal(pElement);
     }
-
 }
 
 template<typename E>
@@ -158,7 +153,6 @@ void ListaPaginada<E>::insercionPaginadaAlFinal(E pElement) {
     }else{
         insertarAlFinal(pElement);
     }
-
 }
 
 template<typename E>
@@ -269,18 +263,5 @@ void ListaPaginada<E>::remover(int pPos) {
 template<typename E>
 void ListaPaginada<E>::removerPag(int pPos) {
 
-}
-
-template<typename E>
-void ListaPaginada<E>::imprimir() {
-    Nodo<E>*curr=head;
-    while(curr!=NULL){
-        cout<<"HEAD: "<< typeid(head->element).name()<<endl;
-        cout<<"TAIL: "<< typeid(tail->element).name()<<endl;
-        cout<< typeid(curr->element).name()<<endl;
-        curr=curr->next;
-    }
-    curr=NULL;
-    delete curr;
 }
 #endif //AIRWAR_LISTAPAGINADA_H

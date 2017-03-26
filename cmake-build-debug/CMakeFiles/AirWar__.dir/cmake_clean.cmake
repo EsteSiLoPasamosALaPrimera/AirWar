@@ -1,5 +1,8 @@
 file(REMOVE_RECURSE
   "CMakeFiles/AirWar__.dir/main.cpp.o"
+  "CMakeFiles/AirWar__.dir/JetFighter.cpp.o"
+  "CMakeFiles/AirWar__.dir/Observer.cpp.o"
+  "CMakeFiles/AirWar__.dir/Subject.cpp.o"
   "AirWar__.pdb"
   "AirWar__"
 )

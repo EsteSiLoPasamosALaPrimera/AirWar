@@ -81,17 +81,95 @@ CMakeFiles/AirWar__.dir/main.cpp.o.provides: CMakeFiles/AirWar__.dir/main.cpp.o.
 CMakeFiles/AirWar__.dir/main.cpp.o.provides.build: CMakeFiles/AirWar__.dir/main.cpp.o
 
 
+CMakeFiles/AirWar__.dir/JetFighter.cpp.o: CMakeFiles/AirWar__.dir/flags.make
+CMakeFiles/AirWar__.dir/JetFighter.cpp.o: ../JetFighter.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/AirWar__.dir/JetFighter.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/AirWar__.dir/JetFighter.cpp.o -c /home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp
+
+CMakeFiles/AirWar__.dir/JetFighter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/AirWar__.dir/JetFighter.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp > CMakeFiles/AirWar__.dir/JetFighter.cpp.i
+
+CMakeFiles/AirWar__.dir/JetFighter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AirWar__.dir/JetFighter.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp -o CMakeFiles/AirWar__.dir/JetFighter.cpp.s
+
+CMakeFiles/AirWar__.dir/JetFighter.cpp.o.requires:
+
+.PHONY : CMakeFiles/AirWar__.dir/JetFighter.cpp.o.requires
+
+CMakeFiles/AirWar__.dir/JetFighter.cpp.o.provides: CMakeFiles/AirWar__.dir/JetFighter.cpp.o.requires
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/JetFighter.cpp.o.provides.build
+.PHONY : CMakeFiles/AirWar__.dir/JetFighter.cpp.o.provides
+
+CMakeFiles/AirWar__.dir/JetFighter.cpp.o.provides.build: CMakeFiles/AirWar__.dir/JetFighter.cpp.o
+
+
+CMakeFiles/AirWar__.dir/Observer.cpp.o: CMakeFiles/AirWar__.dir/flags.make
+CMakeFiles/AirWar__.dir/Observer.cpp.o: ../Observer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/AirWar__.dir/Observer.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/AirWar__.dir/Observer.cpp.o -c /home/jeanpaul/ClionProjects/AirWar++/Observer.cpp
+
+CMakeFiles/AirWar__.dir/Observer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/AirWar__.dir/Observer.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jeanpaul/ClionProjects/AirWar++/Observer.cpp > CMakeFiles/AirWar__.dir/Observer.cpp.i
+
+CMakeFiles/AirWar__.dir/Observer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AirWar__.dir/Observer.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jeanpaul/ClionProjects/AirWar++/Observer.cpp -o CMakeFiles/AirWar__.dir/Observer.cpp.s
+
+CMakeFiles/AirWar__.dir/Observer.cpp.o.requires:
+
+.PHONY : CMakeFiles/AirWar__.dir/Observer.cpp.o.requires
+
+CMakeFiles/AirWar__.dir/Observer.cpp.o.provides: CMakeFiles/AirWar__.dir/Observer.cpp.o.requires
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Observer.cpp.o.provides.build
+.PHONY : CMakeFiles/AirWar__.dir/Observer.cpp.o.provides
+
+CMakeFiles/AirWar__.dir/Observer.cpp.o.provides.build: CMakeFiles/AirWar__.dir/Observer.cpp.o
+
+
+CMakeFiles/AirWar__.dir/Subject.cpp.o: CMakeFiles/AirWar__.dir/flags.make
+CMakeFiles/AirWar__.dir/Subject.cpp.o: ../Subject.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/AirWar__.dir/Subject.cpp.o"
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/AirWar__.dir/Subject.cpp.o -c /home/jeanpaul/ClionProjects/AirWar++/Subject.cpp
+
+CMakeFiles/AirWar__.dir/Subject.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/AirWar__.dir/Subject.cpp.i"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jeanpaul/ClionProjects/AirWar++/Subject.cpp > CMakeFiles/AirWar__.dir/Subject.cpp.i
+
+CMakeFiles/AirWar__.dir/Subject.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/AirWar__.dir/Subject.cpp.s"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jeanpaul/ClionProjects/AirWar++/Subject.cpp -o CMakeFiles/AirWar__.dir/Subject.cpp.s
+
+CMakeFiles/AirWar__.dir/Subject.cpp.o.requires:
+
+.PHONY : CMakeFiles/AirWar__.dir/Subject.cpp.o.requires
+
+CMakeFiles/AirWar__.dir/Subject.cpp.o.provides: CMakeFiles/AirWar__.dir/Subject.cpp.o.requires
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/Subject.cpp.o.provides.build
+.PHONY : CMakeFiles/AirWar__.dir/Subject.cpp.o.provides
+
+CMakeFiles/AirWar__.dir/Subject.cpp.o.provides.build: CMakeFiles/AirWar__.dir/Subject.cpp.o
+
+
 # Object files for target AirWar__
 AirWar___OBJECTS = \
-"CMakeFiles/AirWar__.dir/main.cpp.o"
+"CMakeFiles/AirWar__.dir/main.cpp.o" \
+"CMakeFiles/AirWar__.dir/JetFighter.cpp.o" \
+"CMakeFiles/AirWar__.dir/Observer.cpp.o" \
+"CMakeFiles/AirWar__.dir/Subject.cpp.o"
 
 # External object files for target AirWar__
 AirWar___EXTERNAL_OBJECTS =
 
 AirWar__: CMakeFiles/AirWar__.dir/main.cpp.o
+AirWar__: CMakeFiles/AirWar__.dir/JetFighter.cpp.o
+AirWar__: CMakeFiles/AirWar__.dir/Observer.cpp.o
+AirWar__: CMakeFiles/AirWar__.dir/Subject.cpp.o
 AirWar__: CMakeFiles/AirWar__.dir/build.make
 AirWar__: CMakeFiles/AirWar__.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable AirWar__"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable AirWar__"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/AirWar__.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -100,6 +178,9 @@ CMakeFiles/AirWar__.dir/build: AirWar__
 .PHONY : CMakeFiles/AirWar__.dir/build
 
 CMakeFiles/AirWar__.dir/requires: CMakeFiles/AirWar__.dir/main.cpp.o.requires
+CMakeFiles/AirWar__.dir/requires: CMakeFiles/AirWar__.dir/JetFighter.cpp.o.requires
+CMakeFiles/AirWar__.dir/requires: CMakeFiles/AirWar__.dir/Observer.cpp.o.requires
+CMakeFiles/AirWar__.dir/requires: CMakeFiles/AirWar__.dir/Subject.cpp.o.requires
 
 .PHONY : CMakeFiles/AirWar__.dir/requires
 

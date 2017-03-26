@@ -4,12 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/jeanpaul/ClionProjects/AirWar++/JetFighter.cpp" "/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles/AirWar__.dir/JetFighter.cpp.o"
+  "/home/jeanpaul/ClionProjects/AirWar++/Observer.cpp" "/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles/AirWar__.dir/Observer.cpp.o"
+  "/home/jeanpaul/ClionProjects/AirWar++/Subject.cpp" "/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles/AirWar__.dir/Subject.cpp.o"
   "/home/jeanpaul/ClionProjects/AirWar++/main.cpp" "/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles/AirWar__.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../allegro/5.0.11/include"
   )
 
 # Targets to which this target links.

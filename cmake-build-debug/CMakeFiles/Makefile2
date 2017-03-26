@@ -63,11 +63,19 @@ CMAKE_BINARY_DIR = /home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
 # Target rules for target CMakeFiles/AirWar.dir
 
 # All Build rule for target.
+<<<<<<< HEAD
 CMakeFiles/AirWar.dir/all:
 	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/depend
 	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target AirWar"
 .PHONY : CMakeFiles/AirWar.dir/all
+=======
+CMakeFiles/AirWar__.dir/all:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/depend
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles --progress-num=1,2,3,4,5 "Built target AirWar__"
+.PHONY : CMakeFiles/AirWar__.dir/all
+>>>>>>> aeroplane
 
 # Include target in all.
 all: CMakeFiles/AirWar.dir/all
@@ -75,9 +83,15 @@ all: CMakeFiles/AirWar.dir/all
 .PHONY : all
 
 # Build rule for subdir invocation for target.
+<<<<<<< HEAD
 CMakeFiles/AirWar.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/AirWar.dir/all
+=======
+CMakeFiles/AirWar__.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/AirWar__.dir/all
+>>>>>>> aeroplane
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/AirWar.dir/rule
 
