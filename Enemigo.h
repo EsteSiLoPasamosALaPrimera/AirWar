@@ -26,8 +26,7 @@ public:
     ALLEGRO_BITMAP* imagen=NULL;
 
 protected:
-    string id=typeid(Enemigo).name();
-
+    string id = typeid(Enemigo).name();
 };
 
 Enemigo::Enemigo() {

@@ -44,5 +44,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/AirWar.dir/DependInfo.cmake"
+  "CMakeFiles/AirWar__.dir/DependInfo.cmake"
   )

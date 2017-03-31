@@ -9,6 +9,7 @@
 #include "Torre.h"
 #include "TorreMisil.h"
 #include "Enemigo.h"
+#include "Observer.h"
 
 
 #define PANT_X 1300
@@ -21,9 +22,23 @@ using namespace std;
 
 int main(int argc, char* argv[]){
 
+    Observer* observer = new Observer();
+    Subject* subject1 = new Subject(0,0,0);
+    Subject* subject2 = new Subject(0,0,0);
+    Subject* subject3 = new Subject(0,0,0);
+    Subject* subject4 = new Subject(0,0,0);
+    observer->attach(subject1);
+    observer->attach(subject2);
+    observer->attach(subject3);
+    observer->attach(subject4);
+    subject1->notifyObserver();
+    subject2->notifyObserver();
+    subject3->notifyObserver();
+    subject4->notifyObserver();
+
     /*ofstream arch("/home/alfredo/Inicio/Documentos/torres.txt");
     arch<<"Dequiem";
-    arch.close();*/
+    arch.close();
 
     ListaPaginada<Torre> l;
     l.insercionPaginadaAlFinal(Torre(5000,50,50));

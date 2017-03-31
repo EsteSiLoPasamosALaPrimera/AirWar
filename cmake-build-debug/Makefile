@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named AirWar
+# Target rules for targets named AirWar__
 
 # Build rule for target.
-AirWar: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 AirWar
-.PHONY : AirWar
+AirWar__: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 AirWar__
+.PHONY : AirWar__
 
 # fast build rule for target.
-AirWar/fast:
-	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/build
-.PHONY : AirWar/fast
+AirWar__/fast:
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/build
+.PHONY : AirWar__/fast
 
 JetFighter.o: JetFighter.cpp.o
 
@@ -210,7 +210,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -219,7 +219,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -228,7 +228,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/AirWar.dir/build.make CMakeFiles/AirWar.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/AirWar__.dir/build.make CMakeFiles/AirWar__.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -239,9 +239,6 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-<<<<<<< HEAD
-	@echo "... AirWar"
-=======
 	@echo "... AirWar__"
 	@echo "... JetFighter.o"
 	@echo "... JetFighter.i"
@@ -252,7 +249,6 @@ help:
 	@echo "... Subject.o"
 	@echo "... Subject.i"
 	@echo "... Subject.s"
->>>>>>> aeroplane
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

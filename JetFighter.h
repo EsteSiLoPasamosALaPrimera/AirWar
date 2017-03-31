@@ -2,16 +2,14 @@
 #define AIRWAR_JETFIGHTER_H
 
 #include <string>
+#include "Enemigo.h"
 
-class JetFighter {
+class JetFighter:Enemigo {
 private:
     std::string playerName;
 
     int totalHealth;
     int currentHealth;
-
-    int xPosition;
-    int yPosition;
 
     int ammunitionRounds;
     int fireRate;
@@ -32,4 +30,3 @@ public:
 };
 
 #endif //AIRWAR_JETFIGHTER_H
-

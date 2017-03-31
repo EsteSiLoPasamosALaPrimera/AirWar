@@ -1,6 +1,4 @@
 /home/jeanpaul/Programs/clion-2016.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jeanpaul/ClionProjects/AirWar++
-CMake Error: Error in cmake code at
-/home/jeanpaul/ClionProjects/AirWar++/CMakeLists.txt:6:
-Parse error.  Expected a command name, got unquoted argument with text "<<<<<<<".
--- Configuring incomplete, errors occurred!
-See also "/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug/CMakeFiles/CMakeOutput.log".
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
