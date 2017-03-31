@@ -3,7 +3,7 @@ project(AirWar)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp Cola_Paginada.h Nodo.h ListaPaginada.h Enemigo.h Torre.h TorreMisil.h)
+set(SOURCE_FILES main.cpp Cola_Paginada.h Nodo.h ListaPaginada.h Enemigo.h Torre.h TorreMisil.h Lista_Paginada.h Jugador.h Bala.h)
 add_executable(AirWar ${SOURCE_FILES})
 
 INCLUDE_DIRECTORIES( allegro/5.0.11/include )

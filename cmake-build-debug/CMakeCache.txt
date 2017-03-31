@@ -15,6 +15,12 @@
 ########################
 
 //Value Computed by CMake
+AirWar_BINARY_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
+
+//Value Computed by CMake
+AirWar_SOURCE_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++
+
+//Value Computed by CMake
 AirWar___BINARY_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++/cmake-build-debug
 
 //Value Computed by CMake
@@ -23,9 +29,8 @@ AirWar___SOURCE_DIR:STATIC=/home/jeanpaul/ClionProjects/AirWar++
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//Choose the type of build, options are: None(CMAKE_CXX_FLAGS or
-// CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.
-CMAKE_BUILD_TYPE:STRING=Debug
+//No help, variable specified on the command line.
+CMAKE_BUILD_TYPE:UNINITIALIZED=Debug
 
 //The CodeBlocks executable
 CMAKE_CODEBLOCKS_EXECUTABLE:FILEPATH=CMAKE_CODEBLOCKS_EXECUTABLE-NOTFOUND
@@ -127,7 +132,7 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=AirWar__
+CMAKE_PROJECT_NAME:STATIC=AirWar
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib

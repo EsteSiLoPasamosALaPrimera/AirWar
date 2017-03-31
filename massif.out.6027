@@ -1,0 +1,182 @@
+desc: (none)
+cmd: ./ejecutable
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=2098634
+mem_heap_B=72704
+mem_heap_extra_B=8
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=2208870
+mem_heap_B=73256
+mem_heap_extra_B=24
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=2210507
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=2219673
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=detailed
+n3: 74280 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 72704 0x4EBAEFE: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n1: 72704 0x40104E8: call_init.part.0 (dl-init.c:72)
+   n1: 72704 0x40105F9: _dl_init (dl-init.c:30)
+    n0: 72704 0x4000CF8: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+ n1: 1024 0x52201D3: _IO_file_doallocate (filedoalloc.c:127)
+  n1: 1024 0x522E592: _IO_doallocbuf (genops.c:398)
+   n1: 1024 0x522D69A: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:556)
+    n1: 1024 0x522E60C: _IO_default_uflow (genops.c:413)
+     n1: 1024 0x5221C68: _IO_getline_info (iogetline.c:60)
+      n1: 1024 0x5220B7B: fgets (iofgets.c:53)
+       n1: 1024 0x400C50: getValueVirtual() (in /home/alfredo/ClionProjects/AirWar/ejecutable)
+        n0: 1024 0x401079: main (in /home/alfredo/ClionProjects/AirWar/ejecutable)
+ n0: 552 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=5
+#-----------
+time=2219673
+mem_heap_B=73256
+mem_heap_extra_B=24
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=2219794
+mem_heap_B=72704
+mem_heap_extra_B=8
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=2225760
+mem_heap_B=73728
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=8
+#-----------
+time=2239937
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=2240446
+mem_heap_B=75304
+mem_heap_extra_B=40
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=2245904
+mem_heap_B=75304
+mem_heap_extra_B=40
+mem_stacks_B=0
+heap_tree=peak
+n3: 75304 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 72704 0x4EBAEFE: ??? (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+  n1: 72704 0x40104E8: call_init.part.0 (dl-init.c:72)
+   n1: 72704 0x40105F9: _dl_init (dl-init.c:30)
+    n0: 72704 0x4000CF8: ??? (in /lib/x86_64-linux-gnu/ld-2.23.so)
+ n1: 2048 0x52201D3: _IO_file_doallocate (filedoalloc.c:127)
+  n2: 2048 0x522E592: _IO_doallocbuf (genops.c:398)
+   n1: 1024 0x522D69A: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:556)
+    n1: 1024 0x522E60C: _IO_default_uflow (genops.c:413)
+     n1: 1024 0x5221C68: _IO_getline_info (iogetline.c:60)
+      n2: 1024 0x5220B7B: fgets (iofgets.c:53)
+       n1: 1024 0x400D0C: getValueRAM() (in /home/alfredo/ClionProjects/AirWar/ejecutable)
+        n0: 1024 0x4010A6: main (in /home/alfredo/ClionProjects/AirWar/ejecutable)
+       n0: 0 in 1 place, below massif's threshold (1.00%)
+   n1: 1024 0x522D8F6: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:820)
+    n1: 1024 0x522C28B: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1331)
+     n1: 1024 0x52217B9: fwrite (iofwrite.c:39)
+      n1: 1024 0x4F3FEC4: std::basic_ostream<char, std::char_traits<char> >& std::__ostream_insert<char, std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*, long) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+       n1: 1024 0x4F40235: std::basic_ostream<char, std::char_traits<char> >& std::operator<< <std::char_traits<char> >(std::basic_ostream<char, std::char_traits<char> >&, char const*) (in /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.21)
+        n0: 1024 0x40108A: main (in /home/alfredo/ClionProjects/AirWar/ejecutable)
+ n0: 552 in 1 place, below massif's threshold (1.00%)
+#-----------
+snapshot=11
+#-----------
+time=2245904
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=12
+#-----------
+time=2246025
+mem_heap_B=73728
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=2247188
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=2248887
+mem_heap_B=75304
+mem_heap_extra_B=40
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=2252047
+mem_heap_B=74280
+mem_heap_extra_B=32
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=2252168
+mem_heap_B=73728
+mem_heap_extra_B=16
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=2272449
+mem_heap_B=72704
+mem_heap_extra_B=8
+mem_stacks_B=0
+heap_tree=empty
