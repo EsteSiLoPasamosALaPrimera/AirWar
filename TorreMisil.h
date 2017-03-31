@@ -18,7 +18,8 @@ TorreMisil::TorreMisil() {
     ataque=3000;
     resistencia=3000;
     imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA1.png");
-    id=typeid(TorreMisil).name();
+    id="TM";
+    velocidad=6;
 }
 
 TorreMisil::TorreMisil(int pResistencia, int pPosX, int pPosY) {
@@ -27,7 +28,8 @@ TorreMisil::TorreMisil(int pResistencia, int pPosX, int pPosY) {
     posX=pPosX;
     posY=pPosY;
     imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA1.png");
-    id=typeid(TorreMisil).name();
+    id="TM";
+    velocidad=6;
 
 
 }

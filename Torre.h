@@ -25,8 +25,8 @@ Torre::Torre() {
     resistencia=2500;
     posX=rand()%1271+15;
     imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA2.png");
-    id=typeid(Torre).name();
-    velocidad=2;
+    id="TR";
+    velocidad=6;
 }
 Torre::Torre(int pResistencia, int pPosX, int pPosY) {
     ataque=1000;
@@ -34,15 +34,12 @@ Torre::Torre(int pResistencia, int pPosX, int pPosY) {
     posX=pPosX;
     posY=pPosY;
     imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA2.png");
-    velocidad=2;
-    id=typeid(Torre).name();
+    velocidad=6;
+    id="TR";
 }
 
 Torre::~Torre() {
 
 }
-
-
-
 
 #endif //AIRWAR_TORRE_H

@@ -20,13 +20,15 @@ public:
 
     void descargar(bool iteracion);
     void moverse();
+    string info();
 
     Enemigo();
     ~Enemigo();
     ALLEGRO_BITMAP* imagen=NULL;
 
 protected:
-    string id=typeid(Enemigo).name();
+    string id="EN";
+    string fillString(string txt,int max);
 
 };
 
@@ -38,15 +40,23 @@ Enemigo::Enemigo() {
     imagen=NULL;
 }
 
+string Enemigo::fillString(string txt,int max) {
+    while(txt.size()<max){
+        txt="0"+txt;
+    }
+    return txt;
+}
+
 void Enemigo::descargar(bool iteracion) {
-    string info=id+";"+to_string(resistencia)+";"+to_string(posX)+";"+to_string(posY)+";\n";
+
+    string infor=id+";"+fillString(to_string(resistencia),4)+";"+fillString(to_string(posX),4)+";"+fillString(to_string(posY),4)+";\n";
     if(iteracion==true){
         ofstream archivo("/home/alfredo/Inicio/Documentos/torres.txt");
-        archivo<<info;
+        archivo<<infor;
         archivo.close();
     }else{
         ofstream archivo("/home/alfredo/Inicio/Documentos/torres.txt",ios::app);
-        archivo<<info;
+        archivo<<infor;
         archivo.close();
     }
 }
@@ -57,5 +67,10 @@ Enemigo::~Enemigo() {
 
 void Enemigo::moverse() {
     posY+=velocidad;
+}
+
+string Enemigo::info() {
+    string infor=id+";"+fillString(to_string(resistencia),4)+";"+fillString(to_string(posX),4)+";"+fillString(to_string(posY),4)+";\n";
+    return infor;
 }
 #endif //AIRWAR_ENEMIGO_H

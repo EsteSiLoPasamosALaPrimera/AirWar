@@ -1,15 +1,14 @@
 #include <iostream>
-<<<<<<< HEAD
-#include <typeinfo>
 #include "fstream"
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
 #include "allegro5/allegro_native_dialog.h"
 #include "Cola_Paginada.h"
-#include "ListaPaginada.h"
 #include "Torre.h"
 #include "TorreMisil.h"
 #include "Enemigo.h"
+#include "Lista_Paginada.h"
+#include "Jugador.h"
 
 
 #define PANT_X 1300
@@ -20,25 +19,123 @@ enum MYKEYS {
 };
 using namespace std;
 
-int main(int argc, char* argv[]){
+int main(int argc, char* argv[]) {
 
-    /*ofstream arch("/home/alfredo/Inicio/Documentos/torres.txt");
-    arch<<"Dequiem";
-    arch.close();*/
+    ALLEGRO_DISPLAY *ventana = NULL;
+    ALLEGRO_EVENT_QUEUE *eventos = NULL;
+    ALLEGRO_TIMER *timer = NULL;
+    bool key[4] = {false, false, false, false};
+    bool redraw = true;
 
-    ListaPaginada<Torre> l;
-    l.insercionPaginadaAlFinal(Torre(5000,50,50));
-    l.insercionPaginadaAlFinal(Torre());
-    l.insercionPaginadaAlFinal(TorreMisil());
-    l.imprimir();
-    /*ALLEGRO_DISPLAY *display = NULL;
+    al_init();
+    al_init_image_addon();
+    al_install_keyboard();
+
+    timer = al_create_timer(1.0/FPS);
+    ventana = al_create_display(PANT_X, PANT_Y);
+    eventos = al_create_event_queue();
+
+    al_register_event_source(eventos, al_get_display_event_source(ventana));
+    al_register_event_source(eventos, al_get_timer_event_source(timer));
+    al_register_event_source(eventos, al_get_keyboard_event_source());
+
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_flip_display();
+    al_start_timer(timer);
+
+    Jugador jugador;
+
+    while (true) {
+        ALLEGRO_EVENT ev;
+        al_wait_for_event(eventos, &ev);
+        if (ev.type == ALLEGRO_EVENT_TIMER) {
+            if (ev.timer.source == timer) {
+                if (key[KEY_UP]) {
+                    jugador.desplazar(1);
+                }
+                if (key[KEY_DOWN]) {
+                    jugador.desplazar(2);
+                }
+                if (key[KEY_LEFT]) {
+                    jugador.desplazar(4);
+                }
+                if (key[KEY_RIGHT]) {
+                    jugador.desplazar(3);
+                }
+                redraw = true;
+            }
+        }
+        else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+            break;
+        }
+        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+            switch (ev.keyboard.keycode) {
+                case ALLEGRO_KEY_UP:
+                    key[KEY_UP] = true;
+                    break;
+
+                case ALLEGRO_KEY_DOWN:
+                    key[KEY_DOWN] = true;
+                    break;
+
+                case ALLEGRO_KEY_LEFT:
+                    key[KEY_LEFT] = true;
+                    break;
+
+                case ALLEGRO_KEY_RIGHT:
+                    key[KEY_RIGHT] = true;
+                    break;
+            }
+        }
+        else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+            switch (ev.keyboard.keycode) {
+                case ALLEGRO_KEY_UP:
+                    key[KEY_UP] = false;
+                    break;
+
+                case ALLEGRO_KEY_DOWN:
+                    key[KEY_DOWN] = false;
+                    break;
+
+                case ALLEGRO_KEY_LEFT:
+                    key[KEY_LEFT] = false;
+                    break;
+
+                case ALLEGRO_KEY_RIGHT:
+                    key[KEY_RIGHT] = false;
+                    break;
+            }
+        }
+        if (redraw && al_is_event_queue_empty(eventos)) {
+            redraw = false;
+            al_clear_to_color(al_map_rgb(0, 0, 0));
+            al_draw_bitmap(jugador.imagen, jugador.posX, jugador.posY, 0);
+            al_flip_display();
+        }
+    }
+
+    al_destroy_timer(timer);
+    al_destroy_event_queue(eventos);
+    al_destroy_display(ventana);
+
+    return 0;
+}
+
+
+
+
+
+
+
+/*int main(int argc, char* argv[]){
+
+    ALLEGRO_DISPLAY *display = NULL;
     ALLEGRO_EVENT_QUEUE *event_queue = NULL;
     ALLEGRO_TIMER *timer = NULL;
     ALLEGRO_TIMER *timer_torres=NULL;
     bool redraw=true;
     bool key[4] = { false, false, false, false };
-
-    ListaPaginada<Torre> torres;
+    inicializarTorres();
 
     if(!al_init()) {
         al_show_native_message_box(display, "Error", "Error", "Failed the display!",
@@ -65,7 +162,7 @@ int main(int argc, char* argv[]){
         return -1;
     }
 
-    timer_torres=al_create_timer(5);
+    timer_torres=al_create_timer(4);
 
     display = al_create_display(PANT_X, PANT_Y);
     if(!display) {
@@ -142,12 +239,15 @@ int main(int argc, char* argv[]){
 
     int coord_x=50;
     int coord_y=50;
+    int cont_torres=0;
 
     Cola_Paginada<ALLEGRO_BITMAP*> imagenes(imagen1);
     imagenes.insertar(imagen2);
     imagenes.insertar(imagen3);
 
     Cola_Paginada<ALLEGRO_BITMAP*> balas;
+
+    Lista_Paginada torres;
 
     while(true)
     {
@@ -174,7 +274,8 @@ int main(int argc, char* argv[]){
                 }
                 redraw = true;
             }else if(ev.timer.source==timer_torres){
-                torres.insertarAlFinal(Torre());
+                torres.insertar(0,lecturaTorres(cont_torres));
+                cont_torres++;
             }
         }
         else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -240,23 +341,16 @@ int main(int argc, char* argv[]){
                 curr->posY-=20;
                 curr=curr->next;
             }
-            if(torres.tam>0){
-                Nodo<Torre>* torr=torres.head;
-                while(torr!=NULL){
-                    if(torr->element.posY>690 || torr->element.resistencia<=0){
-                        Nodo<Torre>* Ttemp=torr->next;
-                        torres.remover(torr);
-                        torr=Ttemp;
-                        Ttemp=NULL;
-                        delete Ttemp;
+            if(torres.tam>0) {
+                for(int i=0;i<torres.tam;i++){
+                    Enemigo tempEn=torres.recorrer(i);
+                    if (tempEn.posY > PANT_Y || tempEn.resistencia <= 0) {
+                        torres.remover(i);
                     }else{
-                        al_draw_bitmap(torr->element.imagen,torr->element.posX,torr->element.posY,0);
-                        torr->element.moverse();
-                        torr=torr->next;
+                        al_draw_bitmap(tempEn.imagen, tempEn.posX, tempEn.posY, 0);
                     }
                 }
-                torr=NULL;
-                delete torr;
+                torres.moverse();
             }
             curr=NULL;
             delete curr;
@@ -273,12 +367,43 @@ int main(int argc, char* argv[]){
     al_destroy_bitmap(bala);
     al_destroy_timer(timer);
     al_destroy_display(display);
-    al_destroy_event_queue(event_queue);*/
+    al_destroy_event_queue(event_queue);
 
-=======
-
-int main() {
-    std::cout << "Hello, World!" << std::endl;
->>>>>>> 8c99ef948ed7c43be910cafcebfe29a7157d9ed9
     return 0;
+}*/
+
+/*void inicializarTorres(){
+    ofstream arquive("/home/alfredo/Inicio/Documentos/totalTorres.txt");
+    for(int v=0;v<50;v++){
+        arquive<<Torre().info();
+        arquive<<TorreMisil().info();
+    }
+    arquive.close();
 }
+
+Enemigo lecturaTorres(int pPos){
+    fstream arquive("/home/alfredo/Inicio/Documentos/totalTorres.txt");
+    string texto="";
+    while(pPos>=0){
+        getline(arquive,texto);
+        pPos--;
+    }
+    arquive.close();
+
+    string id=texto.substr(0,texto.find(';'));
+    texto=texto.substr(texto.find(';')+1);
+    int resist=stoi(texto.substr(0,texto.find(';')));
+    texto=texto.substr(texto.find(';')+1);
+    int posicX=stoi(texto.substr(0,texto.find(';')));
+    texto=texto.substr(texto.find(';')+1);
+    int posicY=stoi(texto.substr(0,texto.find(';')));
+
+    if(id=="TM"){
+        return TorreMisil(resist,posicX,posicY);
+    }else if(id=="TR"){
+        return Torre(resist,posicX,posicY);
+    }else{
+        cout<<"Problemas con el ID"<<endl;
+    }
+}*/
+
