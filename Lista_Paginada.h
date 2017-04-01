@@ -5,33 +5,42 @@
 #ifndef AIRWAR_LISTA_PAGINADA_H
 #define AIRWAR_LISTA_PAGINADA_H
 
-#include "Enemigo.h"
-#include "Nodo.h"
+
+#include "Torre.h"
 #include "TorreMisil.h"
+#include "Bala.h"
+#include "BalaTorre.h"
+#include "BalaMisil.h"
+#include "Jet.h"
 
 class Lista_Paginada{
 public:
     int tam;
     string nom_archivo;
-    Nodo<Enemigo>* head;
-    Nodo<Enemigo>* tail;
+    Nodo<Elemento>* head;
+    Nodo<Elemento>* tail;
+    int num_paginas=4;
 
     Lista_Paginada();
-    void insertar(int pPos, Enemigo enemigo);
+    Lista_Paginada(string nombreArchivo, int NumPaginas);
+    void insertar(int pPos, Elemento enemigo);
     void remover(int pPos);
-    Enemigo recorrer(int pPos);
+    Elemento recorrer(int pPos);
     void moverse();
+    void diagonal();
     void imprimir();
+    void verificarEstado();
+    void setPosY(int pPos,int pPosY);
+    bool bajarResistencia(int pPos,int ataque);
 
 private:
-    int num_paginas=4;
-    void insertarAlInicio(Enemigo enemigo);
-    void insertarAlFinal(Enemigo enemigo);
+    void insertarAlInicio(Elemento enemigo);
+    void insertarAlFinal(Elemento enemigo);
     void removerAlInicio();
     void removerAlFinal();
-    void escritura(Enemigo enemigo);
-    void escritura(Enemigo enemigo,int pPos);
-    Enemigo lectura(int linea,string caracter);
+    void escritura(Elemento enemigo);
+    void escritura(Elemento enemigo,string caracter,int pPos);
+    Elemento lectura(int linea,string caracter);
     void eliminar(int linea,string caracter);
     bool validar=true;
 
@@ -43,12 +52,27 @@ Lista_Paginada::Lista_Paginada() {
     nom_archivo="/home/alfredo/Inicio/Documentos/torres.txt";
 }
 
-void Lista_Paginada::escritura(Enemigo enemigo) {
-    enemigo.descargar(validar);
+Lista_Paginada::Lista_Paginada(string nombreArchivo,int NumPaginas) {
+    head=tail=NULL;
+    tam=0;
+    nom_archivo=nombreArchivo;
+    verificarEstado();
+    num_paginas=NumPaginas;
+}
+
+void Lista_Paginada::verificarEstado() {
+    if(tam==0){
+        ofstream arq(nom_archivo);
+        arq.close();
+    }
+}
+
+void Lista_Paginada::escritura(Elemento enemigo) {
+    enemigo.descargar(validar,nom_archivo);
     validar=false;
 }
 
-void Lista_Paginada::escritura(Enemigo enemigo, int pPos) {
+void Lista_Paginada::escritura(Elemento enemigo,string caracter, int pPos) {
     fstream archivo(nom_archivo);
     pPos=pPos-num_paginas;
     string texto="";
@@ -58,10 +82,12 @@ void Lista_Paginada::escritura(Enemigo enemigo, int pPos) {
             ref=archivo.tellp();
         }
         getline(archivo,texto);
-        pPos--;
+        if(texto.find(caracter)!=0){
+            pPos--;
+        }
     }
     archivo.seekp(ref);
-    archivo<<enemigo.info();
+    archivo<<enemigo.info()<<endl;
     archivo.close();
 
 }
@@ -70,16 +96,23 @@ void Lista_Paginada::eliminar(int linea,string caracter) {
     fstream archivo(nom_archivo);
     string texto="";
     linea=linea-num_paginas;
+    int sav=0;
     while(linea>=0){
+        sav=archivo.tellg();
         getline(archivo,texto);
-        if(linea-1==0){
-            archivo<<caracter;
+        if(texto.find(caracter)!=0){
+            if(linea==0){
+                archivo.seekg(sav);
+                archivo<<caracter;
+            }
+            linea--;
         }
-        linea--;
     }
+    archivo.close();
+    tam--;
 }
 
-Enemigo Lista_Paginada::lectura(int linea,string caracter) {
+Elemento Lista_Paginada::lectura(int linea,string caracter) {
     fstream archivo(nom_archivo);
     string texto="";
     linea=linea-num_paginas;
@@ -90,7 +123,6 @@ Enemigo Lista_Paginada::lectura(int linea,string caracter) {
         }
     }
     archivo.close();
-
     string id=texto.substr(0,texto.find(';'));
     texto=texto.substr(texto.find(';')+1);
     int resist=stoi(texto.substr(0,texto.find(';')));
@@ -104,9 +136,15 @@ Enemigo Lista_Paginada::lectura(int linea,string caracter) {
     }else if(id=="TR"){
         return Torre(resist,posicX,posicY);
     }else if(id=="BA"){
-        return
+        return Bala(resist,posicX,posicY);
+    }else if(id=="BT"){
+        return BalaTorre(resist,posicX,posicY);
+    }else if(id=="BM"){
+        return BalaMisil(resist,posicX,posicY);
+    }else if(id=="JT"){
+        return Jet(resist,posicX,posicY);
     }else{
-        cout<<"Problemas con el ID"<<endl;
+        cout<<"Problemas con el ID: "<<id<<endl;
     }
 }
 
@@ -118,7 +156,7 @@ void Lista_Paginada::removerAlFinal() {
             delete tail;
             tail=head;
         }else{
-            Nodo<Enemigo>* temp=head;
+            Nodo<Elemento>* temp=head;
             while(temp->next!=tail){
                 temp=temp->next;
             }
@@ -141,7 +179,7 @@ void Lista_Paginada::removerAlInicio() {
             delete tail;
             tail=head;
         }else{
-            Nodo<Enemigo>* temp=head;
+            Nodo<Elemento>* temp=head;
             head=head->next;
             delete temp;
         }
@@ -151,11 +189,11 @@ void Lista_Paginada::removerAlInicio() {
     }
 }
 
-void Lista_Paginada::insertarAlInicio(Enemigo enemigo) {
+void Lista_Paginada::insertarAlInicio(Elemento enemigo) {
     if(tam==0){
-        head=tail=new Nodo<Enemigo>(enemigo);
+        head=tail=new Nodo<Elemento>(enemigo);
     }else{
-        Nodo<Enemigo>* curr=new Nodo<Enemigo>(enemigo,head);
+        Nodo<Elemento>* curr=new Nodo<Elemento>(enemigo,head);
         head=curr;
         curr=NULL;
         delete curr;
@@ -168,21 +206,21 @@ void Lista_Paginada::insertarAlInicio(Enemigo enemigo) {
     }
 }
 
-void Lista_Paginada::insertarAlFinal(Enemigo enemigo) {
+void Lista_Paginada::insertarAlFinal(Elemento enemigo) {
     if(tam==0){
-        head=tail=new Nodo<Enemigo>(enemigo);
+        head=tail=new Nodo<Elemento>(enemigo);
     }else{
         if(tam>=num_paginas){
             escritura(enemigo);
         }else{
-            tail->next=new Nodo<Enemigo>(enemigo);
+            tail->next=new Nodo<Elemento>(enemigo);
             tail=tail->next;
         }
     }
     tam++;
 }
 
-void Lista_Paginada::insertar(int pPos, Enemigo enemigo) {
+void Lista_Paginada::insertar(int pPos, Elemento enemigo) {
     if(pPos>=0 && pPos<tam){
         if(tam<num_paginas){
             if(pPos==0){
@@ -190,12 +228,12 @@ void Lista_Paginada::insertar(int pPos, Enemigo enemigo) {
             }else if(pPos==tam-1){
                 insertarAlFinal(enemigo);
             }else{
-                Nodo<Enemigo>* temp=head;
+                Nodo<Elemento>* temp=head;
                 while(pPos!=1){
                     temp=temp->next;
                     pPos--;
                 }
-                temp->next=new Nodo<Enemigo>(enemigo,temp->next);
+                temp->next=new Nodo<Elemento>(enemigo,temp->next);
                 tam++;
                 temp=NULL;
                 delete temp;
@@ -206,12 +244,12 @@ void Lista_Paginada::insertar(int pPos, Enemigo enemigo) {
             }else if(pPos==tam-1){
                 insertarAlFinal(enemigo);
             }else{
-                Nodo<Enemigo>* temp=head;
+                Nodo<Elemento>* temp=head;
                 while(pPos!=1){
                     temp=temp->next;
                     pPos--;
                 }
-                temp->next=new Nodo<Enemigo>(enemigo,temp->next);
+                temp->next=new Nodo<Elemento>(enemigo,temp->next);
                 tam++;
                 temp=NULL;
                 delete temp;
@@ -226,14 +264,14 @@ void Lista_Paginada::insertar(int pPos, Enemigo enemigo) {
      insertarAlInicio(enemigo);
     }
     else{
-        cout<<"Posicion fuera de rango"<<endl;
+        cout<<"Posicion fuera de rango para insertar"<<endl;
     }
 }
 
-Enemigo Lista_Paginada::recorrer(int pPos) {
+Elemento Lista_Paginada::recorrer(int pPos) {
     if(pPos>=0 && pPos<tam){
         if(pPos<num_paginas){
-            Nodo<Enemigo>* temp=head;
+            Nodo<Elemento>* temp=head;
             while(pPos!=0){
                 pPos--;
                 temp=temp->next;
@@ -243,9 +281,8 @@ Enemigo Lista_Paginada::recorrer(int pPos) {
             return lectura(pPos,"+");
         }
     }else{
-        cout<<"Posicion invalida"<<endl;
+        cout<<"Posicion invalida al recorrer:Fuera de rango con: "<<pPos<<" con: "<<tam<<endl;
     }
-
 }
 
 
@@ -257,8 +294,8 @@ void Lista_Paginada::remover(int pPos) {
             }else if(pPos==tam-1){
                 removerAlFinal();
             }else{
-                Nodo<Enemigo>*curr=head;
-                Nodo<Enemigo>*temp=NULL;
+                Nodo<Elemento>*curr=head;
+                Nodo<Elemento>*temp=NULL;
                 while(pPos!=1){
                     curr=curr->next;
                     pPos--;
@@ -274,37 +311,32 @@ void Lista_Paginada::remover(int pPos) {
             if(pPos==0){
                 head->element=lectura(num_paginas,"+");
                 eliminar(num_paginas,"+");
-                tam--;
             }else if(pPos==tam-1){
-                tail->element=lectura(num_paginas,"+");
-                eliminar(num_paginas,"+");
-                tam--;
+                eliminar(pPos,"+");
             }else{
                 if(pPos<num_paginas){
-                    Nodo<Enemigo>* pTemp=head;
+                    Nodo<Elemento>* pTemp=head;
                     while(pPos!=0){
                         pPos--;
                         pTemp=pTemp->next;
                     }
                     pTemp->element=lectura(num_paginas,"+");
                     eliminar(num_paginas,"+");
-                    tam--;
                 }else{
                     eliminar(pPos,"+");
-                    tam--;
                 }
             }
         }else{
             cout<<"Error al remover"<<endl;
         }
     }else{
-        cout<<"Posicion invalida"<<endl;
+        cout<<"Posicion invalida al remover, pos: "<<pPos<<endl;
     }
 }
 
 void Lista_Paginada::moverse() {
-    Nodo<Enemigo>* pTemp=head;
-    Enemigo eTemp;
+    Nodo<Elemento>* pTemp=head;
+    Elemento eTemp;
     for(int i=0;i<tam;i++){
         if(i<num_paginas){
             pTemp->element.moverse();
@@ -312,20 +344,87 @@ void Lista_Paginada::moverse() {
         }else{
             eTemp=lectura(i,"+");
             eTemp.moverse();
-            escritura(eTemp,i);
+            escritura(eTemp,"+",i);
         }
     }
+}
 
-
+void Lista_Paginada::diagonal() {
+    Nodo<Elemento>* pTemp=head;
+    Elemento eTemp;
+    for(int i=0;i<tam;i++){
+        if(i<num_paginas){
+            if(pTemp->element.resistencia<=400){
+                pTemp->element.diagonalDer();
+            }else{
+                pTemp->element.diagonalIzq();
+            }
+            pTemp=pTemp->next;
+        }else{
+            eTemp=lectura(i,"+");
+            if(eTemp.resistencia<=400){
+                eTemp.diagonalDer();
+            }else{
+                eTemp.diagonalIzq();
+            }
+            escritura(eTemp,"+",i);
+        }
+    }
 }
 
 
+void Lista_Paginada::setPosY(int pPos, int pPosY) {
+    if(pPos>=0 && pPos<tam){
+        if(pPos<num_paginas){
+            Nodo<Elemento>* temp=head;
+            while(pPos!=0){
+                pPos--;
+                temp=temp->next;
+            }
+            temp->element.posY=pPosY;
+        }else{
+            Elemento enTempl=lectura(pPos,"+");
+            enTempl.posY=pPosY;
+            escritura(enTempl,"+",pPos);
+        }
+    }else{
+        cout<<"Posicion invalida al cambiar posY"<<endl;
+    }
+}
+
+bool Lista_Paginada::bajarResistencia(int pPos,int ataque) {
+    if(pPos>=0 && pPos<tam){
+        if(pPos<num_paginas){
+            Nodo<Elemento>* temp=head;
+            while(pPos!=0){
+                pPos--;
+                temp=temp->next;
+            }
+            temp->element.resistencia-=ataque;
+            if(temp->element.resistencia<=0){
+                return true;
+            }else{
+                return false;
+            }
+        }else{
+            Elemento enTempl=lectura(pPos,"+");
+            enTempl.resistencia-=ataque;
+            escritura(enTempl,"+",pPos);
+            if(enTempl.resistencia<=0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }else{
+        cout<<"Posicion invalida al reducir resistencia"<<endl;
+    }
+}
 
 void Lista_Paginada::imprimir() {
     for(int i=0;i<tam;i++){
-        cout<<recorrer(i).info();
+        cout<<recorrer(i).info()<<endl;
     }
 }
-
 
 #endif //AIRWAR_LISTA_PAGINADA_H

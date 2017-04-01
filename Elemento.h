@@ -10,7 +10,7 @@
 
 using namespace std;
 
-class Enemigo{
+class Elemento{
 public:
     int posX;
     int posY;
@@ -18,12 +18,15 @@ public:
     int ataque;
     int resistencia;
 
-    void descargar(bool iteracion);
-    void moverse();
+    void descargar(bool iteracion,string nomArchivo);
+    virtual void moverse();
+    void diagonalIzq();
+    void diagonalDer();
     string info();
+    string getID();
 
-    Enemigo();
-    ~Enemigo();
+    Elemento();
+    ~Elemento();
     ALLEGRO_BITMAP* imagen=NULL;
 
 protected:
@@ -32,7 +35,7 @@ protected:
 
 };
 
-Enemigo::Enemigo() {
+Elemento::Elemento() {
     posX=posY=0;
     ataque=0;
     velocidad=0;
@@ -40,37 +43,55 @@ Enemigo::Enemigo() {
     imagen=NULL;
 }
 
-string Enemigo::fillString(string txt,int max) {
+string Elemento::fillString(string txt,int max) {
     while(txt.size()<max){
         txt="0"+txt;
     }
     return txt;
 }
 
-void Enemigo::descargar(bool iteracion) {
+void Elemento::descargar(bool iteracion,string nomArchivo) {
 
     string infor=id+";"+fillString(to_string(resistencia),4)+";"+fillString(to_string(posX),4)+";"+fillString(to_string(posY),4)+";\n";
     if(iteracion==true){
-        ofstream archivo("/home/alfredo/Inicio/Documentos/torres.txt");
+        ofstream archivo(nomArchivo);
         archivo<<infor;
         archivo.close();
     }else{
-        ofstream archivo("/home/alfredo/Inicio/Documentos/torres.txt",ios::app);
+        ofstream archivo(nomArchivo,ios::app);
         archivo<<infor;
         archivo.close();
     }
 }
 
-Enemigo::~Enemigo() {
+Elemento::~Elemento() {
     //al_destroy_bitmap(imagen);
 }
 
-void Enemigo::moverse() {
-    posY+=velocidad;
+void Elemento::moverse() {
+
 }
 
-string Enemigo::info() {
-    string infor=id+";"+fillString(to_string(resistencia),4)+";"+fillString(to_string(posX),4)+";"+fillString(to_string(posY),4)+";\n";
+
+void Elemento::diagonalIzq() {
+    posY+=velocidad;
+    posX-=velocidad;
+}
+
+
+void Elemento::diagonalDer() {
+    posY+=velocidad;
+    posX+=velocidad;
+}
+
+
+string Elemento::info() {
+    string infor=id+";"+fillString(to_string(resistencia),4)+";"+fillString(to_string(posX),4)+";"+fillString(to_string(posY),4)+";";
     return infor;
+}
+
+string Elemento::getID() {
+    return id;
+
 }
 #endif //AIRWAR_ENEMIGO_H

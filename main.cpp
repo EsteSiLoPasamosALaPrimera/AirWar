@@ -6,9 +6,10 @@
 #include "Cola_Paginada.h"
 #include "Torre.h"
 #include "TorreMisil.h"
-#include "Enemigo.h"
+#include "Elemento.h"
 #include "Lista_Paginada.h"
 #include "Jugador.h"
+#include "BalaTorre.h"
 
 
 #define PANT_X 1300
@@ -21,9 +22,20 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
 
-    ALLEGRO_DISPLAY *ventana = NULL;
+    /*Lista_Paginada bl;
+    bl.nom_archivo="/home/alfredo/Inicio/Documentos/balas.txt";
+    bl.insertar(0,Bala(50,50,50));
+    bl.insertar(0,Bala(60,60,60));
+    bl.insertar(0,Bala(70,70,70));
+    bl.insertar(0,Bala(70,70,70));
+    bl.insertar(0,Bala(70,70,70));
+    bl.imprimir();*/
+
+
+    /*ALLEGRO_DISPLAY *ventana = NULL;
     ALLEGRO_EVENT_QUEUE *eventos = NULL;
     ALLEGRO_TIMER *timer = NULL;
+    ALLEGRO_TIMER* timer_torres=NULL;
     bool key[4] = {false, false, false, false};
     bool redraw = true;
 
@@ -32,18 +44,25 @@ int main(int argc, char* argv[]) {
     al_install_keyboard();
 
     timer = al_create_timer(1.0/FPS);
+    timer_torres=al_create_timer(2);
     ventana = al_create_display(PANT_X, PANT_Y);
     eventos = al_create_event_queue();
 
     al_register_event_source(eventos, al_get_display_event_source(ventana));
     al_register_event_source(eventos, al_get_timer_event_source(timer));
+    al_register_event_source(eventos,al_get_timer_event_source(timer_torres));
     al_register_event_source(eventos, al_get_keyboard_event_source());
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_flip_display();
     al_start_timer(timer);
+    al_start_timer(timer_torres);
 
     Jugador jugador;
+    Lista_Paginada torres;
+    Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",5);
+    Lista_Paginada balas_naves("/home/alfredo/Inicio/Documentos/balasNaves.txt",5);
+    int pasosTorre=0;
 
     while (true) {
         ALLEGRO_EVENT ev;
@@ -63,6 +82,8 @@ int main(int argc, char* argv[]) {
                     jugador.desplazar(3);
                 }
                 redraw = true;
+            }else if(ev.timer.source==timer_torres){
+                torres.insertar(0,Torre());
             }
         }
         else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -104,19 +125,74 @@ int main(int argc, char* argv[]) {
                 case ALLEGRO_KEY_RIGHT:
                     key[KEY_RIGHT] = false;
                     break;
+                case ALLEGRO_KEY_W:
+                    jugador.agregarBala();
+                    break;
             }
         }
         if (redraw && al_is_event_queue_empty(eventos)) {
+            if(jugador.vidas<=0){
+                break;
+            }
             redraw = false;
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(jugador.imagen, jugador.posX, jugador.posY, 0);
+            if(jugador.balas.tam>0){
+                for(int p=0;p<jugador.balas.tam;p++){
+                    Elemento bTemp=jugador.balas.recorrer(p);
+                    al_draw_bitmap(bTemp.imagen,bTemp.posX,bTemp.posY,0);
+
+                }
+                jugador.mover_Balas();
+                jugador.eliminar_Balas();
+
+            }
+            if(torres.tam>0){
+                for(int u=0;u<torres.tam;u++){
+                    Elemento tTemp=torres.recorrer(u);
+                    al_draw_bitmap(tTemp.imagen,tTemp.posX,tTemp.posY,0);
+                    if(pasosTorre>=50){
+                        if(tTemp.getID()=="TR"){
+                            balas_enemigas.insertar(0,BalaTorre(tTemp.posX,tTemp.posX,tTemp.posY));
+                        }else{
+                            balas_enemigas.insertar(0,BalaMisil(tTemp.posX,tTemp.posX,tTemp.posY));
+                        }
+                    }
+                }
+                torres.moverse();
+                jugador.detectarColisionBalas(torres);
+                jugador.detectarColisionJugador(torres,50);
+                for(int i=0;i<torres.tam;i++){
+                    if(torres.recorrer(i).posY>=PANT_Y || torres.recorrer(i).posY<0){
+                        torres.remover(i);
+                    }
+                }
+                if(pasosTorre>=50){
+                    pasosTorre=0;
+                }
+                pasosTorre++;
+            }
+
+            if(balas_enemigas.tam>0){
+                for(int s=0;s<balas_enemigas.tam;s++){
+                    Elemento bEn=balas_enemigas.recorrer(s);
+                    al_draw_bitmap(bEn.imagen,bEn.posX,bEn.posY,0);
+                }
+                balas_enemigas.diagonal();
+                jugador.detectarColisionBalasEnemigas(balas_enemigas,10);
+                for(int i=0;i<balas_enemigas.tam;i++){
+                    if(balas_enemigas.recorrer(i).posY>=PANT_Y){
+                        balas_enemigas.remover(i);
+                    }
+                }
+            }
             al_flip_display();
         }
     }
 
     al_destroy_timer(timer);
     al_destroy_event_queue(eventos);
-    al_destroy_display(ventana);
+    al_destroy_display(ventana);*/
 
     return 0;
 }
@@ -343,7 +419,7 @@ int main(int argc, char* argv[]) {
             }
             if(torres.tam>0) {
                 for(int i=0;i<torres.tam;i++){
-                    Enemigo tempEn=torres.recorrer(i);
+                    Elemento tempEn=torres.recorrer(i);
                     if (tempEn.posY > PANT_Y || tempEn.resistencia <= 0) {
                         torres.remover(i);
                     }else{
@@ -381,7 +457,7 @@ int main(int argc, char* argv[]) {
     arquive.close();
 }
 
-Enemigo lecturaTorres(int pPos){
+Elemento lecturaTorres(int pPos){
     fstream arquive("/home/alfredo/Inicio/Documentos/totalTorres.txt");
     string texto="";
     while(pPos>=0){
