@@ -10,24 +10,24 @@
 class TorreMisil: public Elemento{
 public:
     TorreMisil();
-    TorreMisil(int pResistencia,int pPosX,int pPosY);
+    TorreMisil(int pResistencia,int pPosX,float pPosY);
 
 };
 
 TorreMisil::TorreMisil() {
     resistencia=300;
-    posX=rand()%1160+15;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA1.png");
+    posX=(rand()%12)*100;
     id="TM";
-    velocidad=6;
+    velocidad=10*(1.0/60);
+    puntaje=10;
 }
 
-TorreMisil::TorreMisil(int pResistencia, int pPosX, int pPosY) {
+TorreMisil::TorreMisil(int pResistencia, int pPosX, float pPosY) {
     resistencia=pResistencia;
     posX=pPosX;
     posY=pPosY;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA1.png");
     id="TM";
-    velocidad=6;
+    velocidad=10*(1.0/60);
+    puntaje=10;
 }
 #endif //AIRWAR_TORREMISIL_H

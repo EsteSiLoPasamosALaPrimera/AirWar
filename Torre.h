@@ -10,30 +10,24 @@
 
 class Torre : public Elemento{
 public:
-    int pasos;
     Torre();
-    Torre(int pResistencia,int pPosX,int pPosY);
-    ~Torre();
+    Torre(int pResistencia,int pPosX,float pPosY);
 };
 
 Torre::Torre() {
     resistencia=200;
-    posX=rand()%1160+15;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA2.png");
+    posX=(rand()%12)*100;
     id="TR";
-    velocidad=2;
+    velocidad=10*(1.0/60);
+    puntaje=5;
 }
-Torre::Torre(int pResistencia, int pPosX, int pPosY) {
+Torre::Torre(int pResistencia, int pPosX, float pPosY) {
     resistencia=pResistencia;
     posX=pPosX;
     posY=pPosY;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/torreA2.png");
-    velocidad=2;
+    velocidad=10*(1.0/60);
     id="TR";
-}
-
-Torre::~Torre() {
-
+    puntaje=5;
 }
 
 

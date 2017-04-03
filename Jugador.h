@@ -5,7 +5,6 @@
 #ifndef AIRWAR_JUGADOR_H
 #define AIRWAR_JUGADOR_H
 
-#include <allegro5/allegro.h>
 #include "Elemento.h"
 #include "Bala.h"
 #include "math.h"
@@ -16,6 +15,7 @@ public:
     int vidas;
     int pantX;
     int pantY;
+    int cont_puntaje;
     Lista_Paginada balas;
 
     Jugador();
@@ -27,7 +27,7 @@ public:
     void detectarColisionBalas(Lista_Paginada listA);
     void detectarColisionJugador(Lista_Paginada listA,int centro);
     void detectarColisionBalasEnemigas(Lista_Paginada listA,int radio);
-
+    void agregarVida();
 
 
 };
@@ -38,11 +38,11 @@ Jugador::Jugador() {
     posY=300;
     vidas=3;
     velocidad=6;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/nave3.png");
     ataque=50;
-    pantX=1300;
+    pantX=1200;
     pantY=690;
-    balas=Lista_Paginada("/home/alfredo/Inicio/Documentos/balas.txt",5);
+    balas=Lista_Paginada("/home/alfredo/Inicio/Documentos/balas.txt",2);
+    cont_puntaje=1;
 }
 
 void Jugador::desplazar(int dir) {
@@ -80,7 +80,7 @@ void Jugador::agregarBala(int masX, int masY) {
 
 void Jugador::mover_Balas() {
     if(balas.tam>0){
-        balas.moverse();
+        balas.moverse(0,0);
     }
 }
 
@@ -104,6 +104,8 @@ void Jugador::detectarColisionBalas(Lista_Paginada listA) {
                     if(listA.bajarResistencia(i,ataque)){
                         balas.setPosY(j,-3);
                         listA.setPosY(i,1000);
+                        puntaje+=listA.recorrer(i).puntaje;
+
                     }else{
                         balas.setPosY(j,-3);
                     }
@@ -111,7 +113,7 @@ void Jugador::detectarColisionBalas(Lista_Paginada listA) {
             }
         }
     }
-
+    agregarVida();
 }
 
 void Jugador::detectarColisionJugador(Lista_Paginada listA,int centro) {
@@ -128,8 +130,10 @@ void Jugador::detectarColisionJugador(Lista_Paginada listA,int centro) {
             listA.setPosY(i,1000);
             posX=650;
             posY=590;
+            puntaje+=listA.recorrer(i).puntaje;
         }
     }
+    agregarVida();
 }
 
 
@@ -152,6 +156,13 @@ void Jugador::detectarColisionBalasEnemigas(Lista_Paginada listA,int radio) {
             }
             listA.setPosY(i,1000);
         }
+    }
+}
+
+void Jugador::agregarVida() {
+    if(puntaje>=cont_puntaje*100){
+        vidas++;
+        cont_puntaje++;
     }
 }
 #endif //AIRWAR_JUGADOR_H

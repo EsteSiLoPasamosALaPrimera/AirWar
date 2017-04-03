@@ -1,8 +1,8 @@
 #include <iostream>
-#include "fstream"
 #include "allegro5/allegro.h"
 #include "allegro5/allegro_image.h"
-#include "allegro5/allegro_native_dialog.h"
+#include "allegro5/allegro_font.h"
+#include "allegro5/allegro_ttf.h"
 #include "Cola_Paginada.h"
 #include "Torre.h"
 #include "TorreMisil.h"
@@ -10,59 +10,87 @@
 #include "Lista_Paginada.h"
 #include "Jugador.h"
 #include "BalaTorre.h"
+#include "EnemyFactory.h"
 
 
 #define PANT_X 1300
-#define PANT_Y 690
+#define PANT_Y 690.0
 const float FPS=60;
+
+
 enum MYKEYS {
     KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 };
 using namespace std;
 
+
 int main(int argc, char* argv[]) {
 
-    /*Lista_Paginada bl;
-    bl.nom_archivo="/home/alfredo/Inicio/Documentos/balas.txt";
-    bl.insertar(0,Bala(50,50,50));
-    bl.insertar(0,Bala(60,60,60));
-    bl.insertar(0,Bala(70,70,70));
-    bl.insertar(0,Bala(70,70,70));
-    bl.insertar(0,Bala(70,70,70));
-    bl.imprimir();*/
-
-
-    /*ALLEGRO_DISPLAY *ventana = NULL;
+    ALLEGRO_DISPLAY *ventana = NULL;
     ALLEGRO_EVENT_QUEUE *eventos = NULL;
+
     ALLEGRO_TIMER *timer = NULL;
     ALLEGRO_TIMER* timer_torres=NULL;
+    ALLEGRO_TIMER* timer_naves=NULL;
+
+    ALLEGRO_BITMAP* img_torre=NULL;
+    ALLEGRO_BITMAP* img_jet=NULL;
+    ALLEGRO_BITMAP* img_bomber=NULL;
+    ALLEGRO_BITMAP* img_kamikaze=NULL;
+    ALLEGRO_BITMAP* img_bala=NULL;
+    ALLEGRO_BITMAP* img_jugador=NULL;
+    ALLEGRO_BITMAP* img_torremisil=NULL;
+    ALLEGRO_BITMAP* fondo=NULL;
+
+    ALLEGRO_FONT* font=NULL;
+
+
     bool key[4] = {false, false, false, false};
     bool redraw = true;
 
     al_init();
     al_init_image_addon();
     al_install_keyboard();
+    al_init_font_addon();
+    al_init_ttf_addon();
 
     timer = al_create_timer(1.0/FPS);
-    timer_torres=al_create_timer(2);
+    timer_torres=al_create_timer(6);
+    timer_naves=al_create_timer(3);
     ventana = al_create_display(PANT_X, PANT_Y);
     eventos = al_create_event_queue();
+    img_torre=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/Torre.png");
+    img_torremisil=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/TorreMisil.png");
+    img_bala=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/bala2.png");
+    img_jet=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/jet.png");
+    img_bomber=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/bomber.png");
+    img_kamikaze=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/kami.png");
+    img_jugador=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/jugador1.png");
+    fondo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/fondoAgua.png");
+    font=al_load_ttf_font("/home/alfredo/Inicio/Documentos/28 Days Later.ttf",16,0);
+
 
     al_register_event_source(eventos, al_get_display_event_source(ventana));
     al_register_event_source(eventos, al_get_timer_event_source(timer));
     al_register_event_source(eventos,al_get_timer_event_source(timer_torres));
+    al_register_event_source(eventos,al_get_timer_event_source(timer_naves));
     al_register_event_source(eventos, al_get_keyboard_event_source());
 
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_flip_display();
     al_start_timer(timer);
     al_start_timer(timer_torres);
+    al_start_timer(timer_naves);
 
     Jugador jugador;
+    EnemyFactory fabrica;
     Lista_Paginada torres;
-    Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",5);
-    Lista_Paginada balas_naves("/home/alfredo/Inicio/Documentos/balasNaves.txt",5);
+    Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",2);
+    Lista_Paginada naves("/home/alfredo/Inicio/Documentos/Naves.txt",2);
     int pasosTorre=0;
+
+    float tiempo_final=0;
+    float posYFondo=-1900;
 
     while (true) {
         ALLEGRO_EVENT ev;
@@ -82,8 +110,15 @@ int main(int argc, char* argv[]) {
                     jugador.desplazar(3);
                 }
                 redraw = true;
-            }else if(ev.timer.source==timer_torres){
-                torres.insertar(0,Torre());
+                tiempo_final+=(1.0/FPS);
+                if(posYFondo<0){
+                    posYFondo+=10*(1.0/FPS);
+                }
+            }
+            else if(ev.timer.source==timer_torres){
+                torres.insertar(torres.tam-1,fabrica.getTorreEnemiga());
+            }else{
+                naves.insertar(naves.tam-1,fabrica.getNaveEnemiga());
             }
         }
         else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -136,12 +171,16 @@ int main(int argc, char* argv[]) {
             }
             redraw = false;
             al_clear_to_color(al_map_rgb(0, 0, 0));
-            al_draw_bitmap(jugador.imagen, jugador.posX, jugador.posY, 0);
+            al_draw_bitmap(fondo,0,posYFondo,0);
+            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 10 , ALLEGRO_ALIGN_CENTRE , "TIME %.2f" ,tiempo_final);
+            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 30 , ALLEGRO_ALIGN_CENTRE , "VIDAS %d" , jugador.vidas);
+            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 50 , ALLEGRO_ALIGN_CENTRE , "SCORE %d" , jugador.puntaje);
+
+            al_draw_bitmap(img_jugador, jugador.posX, jugador.posY, 0);
             if(jugador.balas.tam>0){
                 for(int p=0;p<jugador.balas.tam;p++){
                     Elemento bTemp=jugador.balas.recorrer(p);
-                    al_draw_bitmap(bTemp.imagen,bTemp.posX,bTemp.posY,0);
-
+                    al_draw_bitmap(img_bala,bTemp.posX,bTemp.posY,0);
                 }
                 jugador.mover_Balas();
                 jugador.eliminar_Balas();
@@ -150,8 +189,12 @@ int main(int argc, char* argv[]) {
             if(torres.tam>0){
                 for(int u=0;u<torres.tam;u++){
                     Elemento tTemp=torres.recorrer(u);
-                    al_draw_bitmap(tTemp.imagen,tTemp.posX,tTemp.posY,0);
-                    if(pasosTorre>=50){
+                    if(tTemp.getID()=="TR"){
+                        al_draw_bitmap(img_torre,tTemp.posX,tTemp.posY,0);
+                    }else{
+                        al_draw_bitmap(img_torremisil,tTemp.posX,tTemp.posY,0);
+                    }
+                    if(pasosTorre>=150){
                         if(tTemp.getID()=="TR"){
                             balas_enemigas.insertar(0,BalaTorre(tTemp.posX,tTemp.posX,tTemp.posY));
                         }else{
@@ -159,7 +202,7 @@ int main(int argc, char* argv[]) {
                         }
                     }
                 }
-                torres.moverse();
+                torres.moverse(jugador.posX,jugador.posY);
                 jugador.detectarColisionBalas(torres);
                 jugador.detectarColisionJugador(torres,50);
                 for(int i=0;i<torres.tam;i++){
@@ -167,7 +210,7 @@ int main(int argc, char* argv[]) {
                         torres.remover(i);
                     }
                 }
-                if(pasosTorre>=50){
+                if(pasosTorre>=150){
                     pasosTorre=0;
                 }
                 pasosTorre++;
@@ -176,9 +219,9 @@ int main(int argc, char* argv[]) {
             if(balas_enemigas.tam>0){
                 for(int s=0;s<balas_enemigas.tam;s++){
                     Elemento bEn=balas_enemigas.recorrer(s);
-                    al_draw_bitmap(bEn.imagen,bEn.posX,bEn.posY,0);
+                    al_draw_bitmap(img_bala,bEn.posX,bEn.posY,0);
                 }
-                balas_enemigas.diagonal();
+                balas_enemigas.moverse(jugador.posX,jugador.posY);
                 jugador.detectarColisionBalasEnemigas(balas_enemigas,10);
                 for(int i=0;i<balas_enemigas.tam;i++){
                     if(balas_enemigas.recorrer(i).posY>=PANT_Y){
@@ -186,21 +229,46 @@ int main(int argc, char* argv[]) {
                     }
                 }
             }
+            if(naves.tam>0){
+                for(int i=0;i<naves.tam;i++){
+                    Elemento nav=naves.recorrer(i);
+                    if(nav.getID()=="JT"){
+                        al_draw_bitmap(img_jet,nav.posX,nav.posY,0);
+                    }else if(nav.getID()=="JK"){
+                        al_draw_bitmap(img_kamikaze,nav.posX,nav.posY,0);
+                    }else{
+                        al_draw_bitmap(img_bomber,nav.posX,nav.posY,0);
+                    }
+                }
+                naves.moverse(jugador.posX,jugador.posY);
+                jugador.detectarColisionJugador(naves,50);
+                jugador.detectarColisionBalas(naves);
+                for(int c=0;c<naves.tam;c++){
+                    if(naves.recorrer(c).posY>=PANT_Y){
+                        naves.remover(c);
+                    }
+                }
+            }
             al_flip_display();
         }
     }
-
     al_destroy_timer(timer);
+    al_destroy_timer(timer_naves);
+    al_destroy_timer(timer_torres);
+    al_destroy_bitmap(img_jugador);
+    al_destroy_bitmap(img_torre);
+    al_destroy_bitmap(img_torremisil);
+    al_destroy_bitmap(img_bala);
+    al_destroy_bitmap(img_jet);
+    al_destroy_bitmap(img_kamikaze);
+    al_destroy_bitmap(img_bomber);
+    al_destroy_bitmap(fondo);
+    al_destroy_font(font);
     al_destroy_event_queue(eventos);
-    al_destroy_display(ventana);*/
+    al_destroy_display(ventana);
 
     return 0;
 }
-
-
-
-
-
 
 
 /*int main(int argc, char* argv[]){

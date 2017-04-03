@@ -5,23 +5,31 @@
 #ifndef AIRWAR_BALAMISIL_H
 #define AIRWAR_BALAMISIL_H
 
-#include <allegro5/allegro.h>
 #include "Elemento.h"
 
 class BalaMisil: public Elemento{
 public:
-    BalaMisil(int resist,int pPosX,int pPosY);
+    BalaMisil(int resist,int pPosX,float pPosY);
+    void moverse(int refX,int refY);
 };
 
-BalaMisil::BalaMisil(int resist, int pPosX, int pPosY) {
+BalaMisil::BalaMisil(int resist, int pPosX, float pPosY) {
     ataque=100;
     resistencia=resist;
     posX=pPosX;
     posY=pPosY;
-    imagen=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/bala2.png");
     velocidad=4;
     id="BM";
 }
 
+void BalaMisil::moverse(int refX, int refY) {
+    if(posX>refX){
+        posX-=velocidad;
+    }else{
+        posX+=velocidad;
+    }
+    posY+=velocidad;
+
+}
 
 #endif //AIRWAR_BALAMISIL_H
