@@ -283,11 +283,9 @@ void Lista_Paginada::insertar(int pPos, Elemento enemigo) {
             }else{
                 cout<<"Error al insertar"<<endl;
             }
-        }else if(tam==0){
-            insertarAlInicio(enemigo);
         }
         else{
-            cout<<"Posicion fuera de rango para insertar"<<endl;
+            cout<<"Posicion: "<<pPos<<" con tam: "<<tam<<" fuera de rango para insertar en:"<<nom_archivo<<endl;
         }
     }
 }

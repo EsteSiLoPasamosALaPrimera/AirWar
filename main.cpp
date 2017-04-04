@@ -7,6 +7,7 @@
 #include "Lista_Paginada.h"
 #include "Jugador.h"
 #include "EnemyFactory.h"
+#include "Cola_Paginada.h"
 
 #define PANT_X 1300
 #define PANT_Y 690.0
@@ -104,7 +105,10 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     Lista_Paginada torres("/home/alfredo/Inicio/Documentos/torres.txt");
     Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",2);
     Lista_Paginada naves("/home/alfredo/Inicio/Documentos/Naves.txt",2);
+   // Lista_Paginada balas_naves("/home/alfredo/Inicio/Documentos/balasNaves.txt",2);
+
     int pasosTorre=0;
+    int pasosNaves=0;
 
     float tiempo_final=0;
     float posYFondo=-1900;
@@ -289,33 +293,21 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                 pasosTorre++;
             }
 
-            if(balas_enemigas.tam>0){
-                for(int s=0;s<balas_enemigas.tam;s++){
-                    Elemento bEn=balas_enemigas.recorrer(s);
-                    if(bEn.getID()=="BT"){
-                        al_draw_bitmap(img_bala,bEn.posX,bEn.posY,0);
-                    }else{
-                        al_draw_bitmap(img_balamisil,bEn.posX,bEn.posY,0);
-                    }
-
-                }
-                balas_enemigas.moverse(jugador.posX,jugador.posY);
-                jugador.detectarColisionBalasEnemigas(balas_enemigas,10);
-                for(int i=0;i<balas_enemigas.tam;i++){
-                    if(balas_enemigas.recorrer(i).posY>=PANT_Y){
-                        balas_enemigas.remover(i);
-                    }
-                }
-            }
             if(naves.tam>0){
                 for(int i=0;i<naves.tam;i++){
                     Elemento nav=naves.recorrer(i);
                     if(nav.getID()=="JT"){
                         al_draw_bitmap(img_jet,nav.posX,nav.posY,0);
+                        if(pasosNaves>=50){
+                            balas_enemigas.insertar(0,BalaMisil(nav.posX,nav.posX,nav.posY));
+                        }
                     }else if(nav.getID()=="JK"){
                         al_draw_bitmap(img_kamikaze,nav.posX,nav.posY,0);
                     }else if(nav.getID()=="BD"){
                         al_draw_bitmap(img_bomber,nav.posX,nav.posY,0);
+                        if(pasosNaves>=50){
+                            balas_enemigas.insertar(0,BalaMisil(nav.posX,nav.posX,nav.posY));
+                        }
                     }else if(nav.getID()=="AD"){
                         al_draw_bitmap(img_aumentadisparos,nav.posX,nav.posY,0);
                     }else if(nav.getID()=="AM"){
@@ -334,7 +326,31 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                         naves.remover(c);
                     }
                 }
+                if(pasosNaves>=50){
+                    pasosNaves=0;
+                }
+                pasosNaves++;
             }
+
+            if(balas_enemigas.tam>0){
+                for(int s=0;s<balas_enemigas.tam;s++){
+                    Elemento bEn=balas_enemigas.recorrer(s);
+                    if(bEn.getID()=="BT"){
+                        al_draw_bitmap(img_bala,bEn.posX,bEn.posY,0);
+                    }else{
+                        al_draw_bitmap(img_balamisil,bEn.posX,bEn.posY,0);
+                    }
+
+                }
+                balas_enemigas.moverse(jugador.posX,jugador.posY);
+                jugador.detectarColisionBalasEnemigas(balas_enemigas,20);
+                for(int i=0;i<balas_enemigas.tam;i++){
+                    if(balas_enemigas.recorrer(i).posY>=PANT_Y){
+                        balas_enemigas.remover(i);
+                    }
+                }
+            }
+
             al_flip_display();
         }
     }
@@ -364,7 +380,7 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
 
 int main(int argc, char* argv[]){
 
-    AirWarNivel(2,"Alfredo");
+    AirWarNivel(3,"Partida de Alfredo");
     return 0;
 
 }

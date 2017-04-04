@@ -20,7 +20,7 @@ public:
     int num_paginas;
 
     Cola_Paginada();
-    Cola_Paginada(string nomArchivo);
+    Cola_Paginada(string nomArchivo,int numPag);
     void insertar(Elemento elemento);
     void remover();
 
@@ -33,13 +33,14 @@ private:
 
 Cola_Paginada::Cola_Paginada() { }
 
-Cola_Paginada::Cola_Paginada(string nomArchivo) {
+Cola_Paginada::Cola_Paginada(string nomArchivo,int numPag) {
     head=tail=NULL;
     tam=0;
     nom_archivo=nomArchivo;
     ofstream arquive(nom_archivo);
     arquive.close();
     validar=true;
+    num_paginas=numPag;
 }
 
 void Cola_Paginada::carga() {
