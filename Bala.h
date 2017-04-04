@@ -13,6 +13,7 @@ public:
 };
 
 Bala::Bala(int resist,int pPosX,float pPosY) {
+    ataque=50;
     resistencia=resist;
     posX=pPosX;
     posY=pPosY;

@@ -5,90 +5,132 @@
 #ifndef AIRWAR_COLA_PAGINADA_H
 #define AIRWAR_COLA_PAGINADA_H
 
-#include <iostream>
 #include "Nodo.h"
+#include "Elemento.h"
+#include "Jet.h"
+#include "JetKamikaze.h"
+#include "Bombardero.h"
 
-using namespace std;
-
-template <typename E>
 class Cola_Paginada{
 public:
-    Nodo<E>* head;
-    Nodo<E>*tail;
-    int tam=0;
-    int tam_limite;
+    Nodo<Elemento>* head;
+    Nodo<Elemento>* tail;
+    int tam;
+    string nom_archivo;
+    int num_paginas;
 
-
-    ~Cola_Paginada();
     Cola_Paginada();
-    Cola_Paginada(E pElement);
-    void insertar(E pElement);
-    void insertar(E pElement,int posX,int posY);
-    E remover();
-    void clear();
+    Cola_Paginada(string nomArchivo);
+    void insertar(Elemento elemento);
+    void remover();
+
+private:
+    void carga();
+    void descarga(Elemento elemento);
+    bool validar;
+    void insertarAlFinal(Elemento elemento);
 };
 
-template <typename E>
-Cola_Paginada<E>::Cola_Paginada() {
+Cola_Paginada::Cola_Paginada() { }
+
+Cola_Paginada::Cola_Paginada(string nomArchivo) {
     head=tail=NULL;
     tam=0;
+    nom_archivo=nomArchivo;
+    ofstream arquive(nom_archivo);
+    arquive.close();
+    validar=true;
 }
 
-template <typename E>
-Cola_Paginada<E>::Cola_Paginada(E pElement) {
-    head=tail=new Nodo<E>(pElement);
-    tam=1;
-}
+void Cola_Paginada::carga() {
+    fstream archivo(nom_archivo);
+    string texto="";
+    int pPos=0;
+    do{
+        pPos=archivo.tellp();
+        getline(archivo,texto);
+    }while(texto.find("+")==0);
+    archivo.seekp(pPos);
+    archivo<<"+";
+    archivo.close();
 
-template<typename E>
-void Cola_Paginada<E>::insertar(E pElement) {
-    if(tam!=0){
-        tail->next=new Nodo<E>(pElement);
-        tail=tail->next;
+    string nomb=texto.substr(0,texto.find(';'));
+    texto=texto.substr(texto.find(';')+1);
+    float resist=stof(texto.substr(0,texto.find(';')));
+    texto=texto.substr(texto.find(';')+1);
+    float posicX=stof(texto.substr(0,texto.find(';')));
+    texto=texto.substr(texto.find(';')+1);
+    float posicY=stof(texto.substr(0,texto.find(';')));
+
+    if(nomb=="JT"){
+        tail->element=Jet(resist,posicX,posicY);
+    }else if(nomb=="JK"){
+        tail->element=JetKamikaze(resist,posicX,posicY);
+    }else if(nomb=="BD"){
+        tail->element=Bombardero(resist,posicX,posicY);
     }else{
-        head=tail=new Nodo<E>(pElement);
+        cout<<"En cola paginada no se puedo identificar el id: "<<nomb<<endl;
+    }
+}
+
+void Cola_Paginada::descarga(Elemento elemento) {
+    if(validar){
+        fstream archivo(nom_archivo);
+        archivo<<elemento.info()<<endl;
+        archivo.close();
+        validar=false;
+    }else{
+        fstream archivo(nom_archivo,ios::app);
+        archivo<<elemento.info()<<endl;
+        archivo.close();
     }
     tam++;
-
 }
 
-template<typename E>
-void Cola_Paginada<E>::insertar(E pElement, int posX, int posY) {
-    if(tam!=0){
-        tail->next=new Nodo<E>(pElement);
-        tail=tail->next;
-        tail->posX=posX;
-        tail->posY=posY;
+void Cola_Paginada::insertarAlFinal(Elemento elemento) {
+    if(tam==0){
+        head=tail=new Nodo<Elemento>(elemento);
     }else{
-        head=tail=new Nodo<E>(pElement);
-        head->posX=posX;
-        head->posY;
+        tail->next=new Nodo<Elemento>(elemento);
+        tail=tail->next;
     }
     tam++;
 }
 
+void Cola_Paginada::insertar(Elemento elemento) {
+    if(tam>=num_paginas){
+        descarga(elemento);
+    }else{
+        insertarAlFinal(elemento);
+    }
+}
 
-template<typename E>
-E Cola_Paginada<E>::remover() {
-    if(tam!=0){
-        E result=head->element;
-        Nodo<E>* current=head;
-        head=head->next;
-        delete current;
+void Cola_Paginada::remover() {
+    if(head!=NULL){
+        if(tam>num_paginas){
+            tail->next=head;
+            head=head->next;
+            tail=tail->next;
+            tail->next=NULL;
+            carga();
+        }else{
+            if(head==tail){
+                delete tail;
+                head=tail=NULL;
+            }else{
+                Nodo<Elemento>* temp=head;
+                head=head->next;
+                temp->next=NULL;
+                delete temp->next;
+                temp=NULL;
+                delete temp;
+            }
+        }
         tam--;
-        return result;
+    }else{
+        cout<<"Error al remover en cola paginada con: "<<nom_archivo<<endl;
     }
-}
-template<typename E>
-void Cola_Paginada<E>::clear() {
-    while(tam!=0){
-        remover();
-    }
-}
 
-template <typename E>
-Cola_Paginada<E>::~Cola_Paginada() {
-    clear();
 }
 
 #endif //AIRWAR_COLA_PAGINADA_H

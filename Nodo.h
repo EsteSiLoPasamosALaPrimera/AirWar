@@ -5,10 +5,6 @@
 #ifndef AIRWAR_NODO_H
 #define AIRWAR_NODO_H
 
-#include <iostream>
-
-using namespace std;
-
 template<typename E>
 class Nodo{
 public:

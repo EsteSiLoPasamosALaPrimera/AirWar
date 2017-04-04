@@ -20,8 +20,9 @@ public:
 
     void descargar(bool iteracion,string nomArchivo);
     virtual void moverse(int refX,int refY){posY+=velocidad;}
-    string info();
-    string getID();
+    virtual string info();
+    virtual string getID();
+    virtual bool darPowerUp();
 
     Elemento();
     ~Elemento();
@@ -74,7 +75,39 @@ string Elemento::info() {
 
 string Elemento::getID() {
     return id;
-
 }
+bool Elemento::darPowerUp() {
+    switch(rand()%2){
+        case 0:
+            return false;
+            break;
+        case 1:
+            switch (rand()%4){
+                case 0:
+                    id="AM";
+                    resistencia=(rand()%21)+5;
+                    velocidad=0;
+                    break;
+                case 1:
+                    id="AL";
+                    resistencia=(rand()%16)+5;
+                    velocidad=0;
+                    break;
+                case 2:
+                    id="ES";
+                    resistencia=12;
+                    velocidad=0;
+                    break;
+                case 3:
+                    id="AD";
+                    resistencia=10;
+                    velocidad=0;
+                    break;
+            }
+            return true;
+            break;
+    }
+}
+
 
 #endif //AIRWAR_ENEMIGO_H

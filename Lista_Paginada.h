@@ -5,7 +5,7 @@
 #ifndef AIRWAR_LISTA_PAGINADA_H
 #define AIRWAR_LISTA_PAGINADA_H
 
-
+#include "Nodo.h"
 #include "Torre.h"
 #include "TorreMisil.h"
 #include "Bala.h"
@@ -14,6 +14,9 @@
 #include "Jet.h"
 #include "JetKamikaze.h"
 #include "Bombardero.h"
+#include "Laser.h"
+#include "Misil.h"
+#include "PowerUp.h"
 
 class Lista_Paginada{
 public:
@@ -24,6 +27,7 @@ public:
     int num_paginas=4;
 
     Lista_Paginada();
+    Lista_Paginada(string nombreArchivo);
     Lista_Paginada(string nombreArchivo, int NumPaginas);
     void insertar(int pPos, Elemento enemigo);
     void remover(int pPos);
@@ -33,6 +37,7 @@ public:
     bool bajarResistencia(int pPos,int ataque);
     void moverse(int refX,int refY);
     void imprimir();
+    bool darPowerUps(int pPos);
 
 private:
     void insertarAlInicio(Elemento enemigo);
@@ -48,10 +53,13 @@ private:
 
 };
 
-Lista_Paginada::Lista_Paginada() {
+Lista_Paginada::Lista_Paginada() { }
+
+Lista_Paginada::Lista_Paginada(string nombreArchivo) {
     head=tail=NULL;
     tam=0;
-    nom_archivo="/home/alfredo/Inicio/Documentos/torres.txt";
+    nom_archivo=nombreArchivo;
+    verificarEstado();
 }
 
 Lista_Paginada::Lista_Paginada(string nombreArchivo,int NumPaginas) {
@@ -148,9 +156,15 @@ Elemento Lista_Paginada::lectura(int linea,string caracter) {
         return JetKamikaze(resist,posicX,posicY);
     }else if(id=="BD") {
         return Bombardero(resist,posicX,posicY);
+    }else if(id=="LS"){
+        return Laser(resist,posicX,posicY);
+    }else if(id=="MS"){
+        return Misil(resist,posicX,posicY);
+    }else if(id=="AM" || id=="AL" || id=="ES" || id=="AD"){
+        return PowerUp(id,resist,posicX,posicY);
     }
     else{
-        cout<<"Problemas con el ID: "<<id<<endl;
+        cout<<"Problemas con el ID: "<<id<<" en: "<<nom_archivo<<endl;
     }
 }
 
@@ -371,7 +385,9 @@ bool Lista_Paginada::bajarResistencia(int pPos,int ataque) {
                 pPos--;
                 temp=temp->next;
             }
-            temp->element.resistencia-=ataque;
+            if(temp->element.getID()!="AL" && temp->element.getID()!="AM" && temp->element.getID()!="AD" && temp->element.getID()!="ES"){
+             temp->element.resistencia-=ataque;
+            }
             if(temp->element.resistencia<=0){
                 return true;
             }else{
@@ -379,8 +395,10 @@ bool Lista_Paginada::bajarResistencia(int pPos,int ataque) {
             }
         }else{
             Elemento enTempl=lectura(pPos,"+");
-            enTempl.resistencia-=ataque;
-            escritura(enTempl,"+",pPos);
+            if(enTempl.getID()!="AL" && enTempl.getID()!="AM" && enTempl.getID()!="AD" && enTempl.getID()!="ES"){
+                enTempl.resistencia-=ataque;
+                escritura(enTempl,"+",pPos);
+            }
             if(enTempl.resistencia<=0){
                 return true;
             }else{
@@ -433,9 +451,15 @@ Elemento* Lista_Paginada::lecturaPTR(int linea, string caracter) {
         return new JetKamikaze(resist,posicX,posicY);
     }else if(id=="BD") {
         return new Bombardero(resist,posicX,posicY);
+    }else if(id=="LS"){
+        return new Laser(resist,posicX,posicY);
+    }else if(id=="MS"){
+        return new Misil(resist,posicX,posicY);
+    }else if(id=="AM" || id=="AL" || id=="ES" || id=="AD"){
+        return new PowerUp(id,resist,posicX,posicY);
     }
     else{
-        cout<<"Problemas con el ID: "<<id<<endl;
+        cout<<"Problemas con el ID en PTR: "<<id<<" en: "<<nom_archivo<<endl;
     }
 }
 
@@ -455,7 +479,10 @@ void Lista_Paginada::moverse(int refX,int refY) {
                 ptr= new JetKamikaze(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
             }else if(pTemp->element.getID()=="BD"){
                 ptr= new Bombardero(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
-            }else{
+            }else if(pTemp->element.getID()=="MS"){
+                ptr= new Misil(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
+            }
+            else{
                 ptr=&pTemp->element;
             }
             ptr->moverse(refX,refY);
@@ -471,6 +498,31 @@ void Lista_Paginada::moverse(int refX,int refY) {
     delete pTemp;
     ptr=NULL;
     delete ptr;
+}
+
+
+bool Lista_Paginada::darPowerUps(int pPos) {
+    if(pPos>=0 && pPos<tam){
+        bool respuesta=false;
+        if(pPos<num_paginas){
+            Nodo<Elemento>* temp=head;
+            while(pPos!=0){
+                pPos--;
+                temp=temp->next;
+            }
+
+            respuesta=temp->element.darPowerUp();
+        }else{
+            Elemento enTempl=lectura(pPos,"+");
+            respuesta=enTempl.darPowerUp();
+            escritura(enTempl,"+",pPos);
+        }
+        return respuesta;
+    }else{
+        cout<<"Posicion invalida al convertir a power up"<<endl;
+    }
+
+
 }
 
 #endif //AIRWAR_LISTA_PAGINADA_H
