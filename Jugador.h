@@ -8,7 +8,15 @@
 #include "math.h"
 #include "Lista_Paginada.h"
 #include "Pila_Paginada.h"
+#include "Jefe.h"
 
+
+
+/**
+ * @class Jugador
+ * @brief Clase que representa al jugador
+ * @see Jugador
+ */
 class Jugador: public Elemento{
 public:
     int vidas;
@@ -30,12 +38,18 @@ public:
     void detectarColisionBalas(Lista_Paginada listA);
     void detectarColisionJugador(Lista_Paginada listA,int centro);
     void detectarColisionBalasEnemigas(Lista_Paginada listA,int radio);
+    void detectarColisionJefe(Elemento jefe);
+    Jefe detectarColisionBalasJefe(Jefe jefe);
     void agregarVida();
     void usarPowerUp();
 };
 
+
+/**
+ * @brief Constructor de la clase Jugador
+ */
 Jugador::Jugador() {
-    resistencia=350;
+    resistencia=700;
     posX=300;
     posY=300;
     vidas=3;
@@ -43,7 +57,7 @@ Jugador::Jugador() {
     ataque=50;
     pantX=1200;
     pantY=690;
-    balas=Lista_Paginada("/home/alfredo/Inicio/Documentos/balas.txt",4);
+    balas=Lista_Paginada("/home/alfredo/Inicio/Documentos/balas.txt",5);
     powerUps=Pila_Paginada("/home/alfredo/Inicio/Documentos/poderes.txt");
     cont_puntaje=1;
     modo="BA";
@@ -52,6 +66,10 @@ Jugador::Jugador() {
     num_balas=1;
 }
 
+/**
+ * @brief Metodo encargado de actualizar la posicion en los ejes X y Y del jugador.
+ * @param dir numero que representa la direccion a la cual se mueve el avion.
+ */
 void Jugador::desplazar(int dir) {
     switch (dir){
         case 1:
@@ -77,6 +95,13 @@ void Jugador::desplazar(int dir) {
     }
 }
 
+
+/**
+ * @brief Metodo encargado de agregar objetos de tipo Bala a la Lista_Paginada del jugador
+ * Esto con el fin de representar los disparos que realiza el jugador.
+ * @see Lista_Paginada
+ * @see Bala
+ */
 void Jugador::agregarBala() {
     if(modo=="LS" && ammo_laser>0){
         if(num_balas==1){
@@ -117,12 +142,20 @@ void Jugador::agregarBala() {
 
 }
 
+/**
+ * @brief Metodo encargado de actualizar las posiciones sobre los ejes X y Y de las balas disparadas por el jugador.
+ * @see Lista_Paginada
+ */
 void Jugador::mover_Balas() {
     if(balas.tam>0){
         balas.moverse(0,0);
     }
 }
 
+/**
+ * @brief Metodo encargador de eliminar los objetos de tipo Bala, cuyas posiciones
+ * en el eje Y sobrepasan los de la pantalla del juego.
+ */
 void Jugador::eliminar_Balas() {
     for(int i=0;i<balas.tam;i++){
         if(balas.recorrer(i).posY<=0 || balas.recorrer(i).posY>=690){
@@ -131,31 +164,67 @@ void Jugador::eliminar_Balas() {
     }
 }
 
+/**
+ * @brief Metodo encargado de detectar colisiones entre la Lista_Paginada de balas del jugador
+ * y otra Lista_Paginada con objetos de tipo Elemento.
+ * @see Lista_Paginada
+ * @see Elemento
+ */
 void Jugador::detectarColisionBalas(Lista_Paginada listA) {
     for(int i=0;i<listA.tam;i++){
         Elemento tEnem=listA.recorrer(i);
-        int limX=tEnem.posX+50;
-        int limY=tEnem.posY+50;
-        for(int j=0;j<balas.tam;j++){
-            tEnem=balas.recorrer(j);
-            if(limY-50<=tEnem.posY && tEnem.posY<=limY+50){
-                if(limX-50<=tEnem.posX && tEnem.posX<=limX+50){
-                    if(listA.bajarResistencia(i,tEnem.ataque)){
-                        balas.setPosY(j,-3);
-                        if(!listA.darPowerUps(i)){
-                            listA.setPosY(i,1000);
+        if(tEnem.getID()!="ES" && tEnem.getID()!="AL" && tEnem.getID()!="AM" && tEnem.getID()!="AD"){
+            int limX=tEnem.posX+50;
+            int limY=tEnem.posY+50;
+            for(int j=0;j<balas.tam;j++){
+                tEnem=balas.recorrer(j);
+                if(limY-50<=tEnem.posY && tEnem.posY<=limY+50){
+                    if(limX-50<=tEnem.posX && tEnem.posX<=limX+50){
+                        if(listA.bajarResistencia(i,tEnem.ataque)){
+                            balas.setPosY(j,-3);
+                            if(!listA.darPowerUps(i)){
+                                listA.setPosY(i,1000);
+                            }
+                            puntaje+=listA.recorrer(i).puntaje;
+                        }else{
+                            balas.setPosY(j,-3);
                         }
-                        puntaje+=listA.recorrer(i).puntaje;
-                    }else{
-                        balas.setPosY(j,-3);
                     }
                 }
             }
         }
+        agregarVida();
     }
-    agregarVida();
 }
 
+
+/**
+ * @brief Metodo encargado de detectar colisiones entre el jugador y un objeto de tipo Elemento.
+ * @param jefe objeto de tipo Elemento con el cual se realiza el calculo de colision
+ * @see Elemento
+ */
+void Jugador::detectarColisionJefe(Elemento jefe) {
+    int dist=pow((posX+50)-(jefe.posX+200),2)+pow((posY+50)-(jefe.posY+200),2);
+    dist=pow(dist,0.5);
+    if(dist<210){
+        if(invulnerable<=0){
+            vidas--;
+            posX=650;
+            posY=590;
+            resistencia=700;
+            invulnerable=0.5;
+            num_balas=1;
+        }
+    }
+
+}
+
+/**
+ * @brief Metodo encargado de detectar colisiones entre el objeto Jugador
+ * y otra Lista_Paginada con objetos de tipo Elemento.
+ * @see Lista_Paginada
+ * @see Elemento
+ */
 void Jugador::detectarColisionJugador(Lista_Paginada listA,int centro) {
     int limJugX=posX+50;
     int limJugY=posY+50;
@@ -179,7 +248,7 @@ void Jugador::detectarColisionJugador(Lista_Paginada listA,int centro) {
                     vidas--;
                     posX=650;
                     posY=590;
-                    resistencia=350;
+                    resistencia=700;
                     invulnerable=0.5;
                     num_balas=1;
                 }
@@ -189,7 +258,37 @@ void Jugador::detectarColisionJugador(Lista_Paginada listA,int centro) {
     agregarVida();
 }
 
+/**
+ * @brief Metodo encargado de detectar colisiones entre la Lista_Paginada de balas del jugador y el jefe
+ * @param jefe un objeto de tipo Jefe sobre el cual se realizan las operaciones.
+ * @return un objeto de tipo Jefe
+ * @see Jefe
+ * @see Lista_Paginada
+ */
+Jefe Jugador::detectarColisionBalasJefe(Jefe jefe) {
+    for(int i=0;i<balas.tam;i++){
+        Elemento bTemp=balas.recorrer(i);
+        int dist=pow((bTemp.posX+10)-(jefe.posX+200),2)+pow((bTemp.posY+10)-(jefe.posY+200),2);
+        dist=pow(dist,0.5);
+        if(dist<100){
+            jefe.resistencia-=bTemp.ataque;
+            balas.setPosY(i,-3);
+        }
+    }
 
+
+    return jefe;
+}
+
+
+
+/**
+ * @brief Metodo encargado de detectar colisiones entre la Lista_Paginada de balas del jugador
+ * y otro Lista_Paginada con objetos de tipo BalaTorre o BalaMisil.
+ * @see Lista_Paginada
+ * @see BalaTorre
+ * @see BalaMisil
+ */
 void Jugador::detectarColisionBalasEnemigas(Lista_Paginada listA,int radio) {
     int limJugX=posX+50;
     int limJugY=posY+50;
@@ -204,7 +303,7 @@ void Jugador::detectarColisionBalasEnemigas(Lista_Paginada listA,int radio) {
                 resistencia-=eh.ataque;
                 if(resistencia<=0){
                     vidas--;
-                    resistencia=350;
+                    resistencia=700;
                     posX=650;
                     posY=590;
                     num_balas=1;
@@ -215,6 +314,10 @@ void Jugador::detectarColisionBalasEnemigas(Lista_Paginada listA,int radio) {
     }
 }
 
+/**
+ * @brief Metodo encargado de sumar vidas al jugador al haber alcanzado cierto puntaje
+ * @see Elemento
+ */
 void Jugador::agregarVida() {
     if(puntaje>=cont_puntaje*100){
         vidas++;
@@ -222,6 +325,10 @@ void Jugador::agregarVida() {
     }
 }
 
+/**
+ * @brief Metodo encargado de agregar los efectos de los power-ups al jugador
+ * @see Elemento
+ */
 void Jugador::usarPowerUp() {
     if(powerUps.tam>0){
         if(powerUps.head->element.getID()=="AL"){

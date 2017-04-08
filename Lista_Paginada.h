@@ -17,7 +17,15 @@
 #include "Laser.h"
 #include "Misil.h"
 #include "PowerUp.h"
+#include "Escolta.h"
+#include "Mina.h"
 
+
+/**
+ * @class Lista_Paginada
+ * @brief clase que implementa la lista enlazada simple con limites de memoria mediante paginacion
+ * @see Elemento
+ */
 class Lista_Paginada{
 public:
     int tam;
@@ -53,8 +61,16 @@ private:
 
 };
 
+/**
+ * @brief Constructor de la clase Lista_Paginada
+ */
 Lista_Paginada::Lista_Paginada() { }
 
+
+/**
+ * @brief Constructor de la clase Lista_Paginada
+ * @param nombreArchivo nombre del archivo de texto donde se guardan los datos almacenados en memoria.
+ */
 Lista_Paginada::Lista_Paginada(string nombreArchivo) {
     head=tail=NULL;
     tam=0;
@@ -62,6 +78,11 @@ Lista_Paginada::Lista_Paginada(string nombreArchivo) {
     verificarEstado();
 }
 
+/**
+ * @brief Constructor de la clase Lista_Paginada
+ * @param nombreArchivo nombre del archivo de texto donde se guardan los datos almacenados en memoria.
+ * @param NumPaginas numero de paginas maximas que pueden estar cargadas en memoria.
+ */
 Lista_Paginada::Lista_Paginada(string nombreArchivo,int NumPaginas) {
     head=tail=NULL;
     tam=0;
@@ -70,6 +91,10 @@ Lista_Paginada::Lista_Paginada(string nombreArchivo,int NumPaginas) {
     num_paginas=NumPaginas;
 }
 
+/**
+ * @brief Metodo encargado de verificar si el archivo donde se guardaran los datos existe o no.
+ * En caso de que no exista lo crea.
+ */
 void Lista_Paginada::verificarEstado() {
     if(tam==0){
         ofstream arq(nom_archivo);
@@ -77,11 +102,21 @@ void Lista_Paginada::verificarEstado() {
     }
 }
 
+/**
+ * @brief Metodo encargado de escribir los atributos de un objeto de tipo Elemento en un archivo de texto.
+ * @param enemigo objeto de tipo Elemento cuyos atributos seran guardados
+ * @see Elemento
+ */
 void Lista_Paginada::escritura(Elemento enemigo) {
     enemigo.descargar(validar,nom_archivo);
     validar=false;
 }
 
+/**
+ * @brief Metodo encargado de escribir los atributos de un objeto de tipo Elemento en un archivo de texto.
+ * @param enemigo objeto de tipo Elemento cuyos atributos seran guardados.
+ * @see Elemento
+ */
 void Lista_Paginada::escritura(Elemento enemigo,string caracter, int pPos) {
     fstream archivo(nom_archivo);
     pPos=pPos-num_paginas;
@@ -101,6 +136,11 @@ void Lista_Paginada::escritura(Elemento enemigo,string caracter, int pPos) {
     archivo.close();
 }
 
+/**
+ * @brief Metodo encargado de eliminar una linea de un archivo de texto
+ * @param linea numero de la linea que se desea eliminar
+ * @param caracter char que representa que una linea ha sido borrada.
+ */
 void Lista_Paginada::eliminar(int linea,string caracter) {
     fstream archivo(nom_archivo);
     string texto="";
@@ -121,6 +161,12 @@ void Lista_Paginada::eliminar(int linea,string caracter) {
     tam--;
 }
 
+/**
+ * @brief Metodo encargado de cargar la informacion de una linea del documento de texto.
+ * @param linea numero de la linea que se desea leer.
+ * @param caracter char que representa cuales lineas se deben ignorar cuando se lee.
+ * @return un objeto de tipo Elemento o una de sus clases derivadas.
+ */
 Elemento Lista_Paginada::lectura(int linea,string caracter) {
     fstream archivo(nom_archivo);
     string texto="";
@@ -150,16 +196,20 @@ Elemento Lista_Paginada::lectura(int linea,string caracter) {
         return BalaTorre(resist,posicX,posicY);
     }else if(id=="BM"){
         return BalaMisil(resist,posicX,posicY);
-    }else if(id=="JT"){
-        return Jet(resist,posicX,posicY);
-    }else if(id=="JK"){
-        return JetKamikaze(resist,posicX,posicY);
-    }else if(id=="BD") {
-        return Bombardero(resist,posicX,posicY);
     }else if(id=="LS"){
         return Laser(resist,posicX,posicY);
     }else if(id=="MS"){
         return Misil(resist,posicX,posicY);
+    }else if(id=="MN"){
+        return Mina(resist,posicX,posicY);
+    }else if(id=="JT"){
+        return Jet(resist,posicX,posicY);
+    }else if(id=="SC"){
+        return Escolta(resist,posicX,posicY);
+    }else if(id=="JK"){
+        return JetKamikaze(resist,posicX,posicY);
+    }else if(id=="BD") {
+        return Bombardero(resist,posicX,posicY);
     }else if(id=="AM" || id=="AL" || id=="ES" || id=="AD"){
         return PowerUp(id,resist,posicX,posicY);
     }
@@ -168,7 +218,9 @@ Elemento Lista_Paginada::lectura(int linea,string caracter) {
     }
 }
 
-
+/**
+ * @brief Metodo encargado de remover el ultimo elemento de la lista.
+ */
 void Lista_Paginada::removerAlFinal() {
     if(tail!=NULL){
         if(head==tail){
@@ -192,6 +244,9 @@ void Lista_Paginada::removerAlFinal() {
     }
 }
 
+/**
+ * @brief Metodo encargado de remover el primer elemento de la lista.
+ */
 void Lista_Paginada::removerAlInicio() {
     if(head!=NULL){
         if(head==tail){
@@ -209,6 +264,11 @@ void Lista_Paginada::removerAlInicio() {
     }
 }
 
+/**
+ * @brief Metodo encargado de insertar al inicio de la lista.
+ * @param enemigo objeto de tipo Elemento que sera insertado en la lista
+ * @see Elemento
+ */
 void Lista_Paginada::insertarAlInicio(Elemento enemigo) {
     if(tam==0){
         head=tail=new Nodo<Elemento>(enemigo);
@@ -226,6 +286,11 @@ void Lista_Paginada::insertarAlInicio(Elemento enemigo) {
     }
 }
 
+/**
+ * @brief Metodo encargado de insertar al final de la lista.
+ * @param enemigo objeto de tipo Elemento que sera insertado en la lista
+ * @see Elemento
+ */
 void Lista_Paginada::insertarAlFinal(Elemento enemigo) {
     if(tam==0){
         head=tail=new Nodo<Elemento>(enemigo);
@@ -240,6 +305,14 @@ void Lista_Paginada::insertarAlFinal(Elemento enemigo) {
     tam++;
 }
 
+/**
+ * @brief Metodo encargado de insertar en la lista.
+ * @param pPos posicion de la lista donde se insertara el elemento.
+ * @param enemigo objeto de tipo Elemento que sera insertado en la lista
+ * @see Elemento
+ * @see insertarAlInicio
+ * @insertarAlFinal
+ */
 void Lista_Paginada::insertar(int pPos, Elemento enemigo) {
     if(tam==0){
         insertarAlInicio(enemigo);
@@ -290,6 +363,12 @@ void Lista_Paginada::insertar(int pPos, Elemento enemigo) {
     }
 }
 
+/**
+ * @brief Metodo encargado de recorrer los nodos de la lista.
+ * @param pPos posicion de la lista que se desea buscar.
+ * @return objeto de tipo Elemento
+ * @see lectura
+ */
 Elemento Lista_Paginada::recorrer(int pPos) {
     if(pPos>=0 && pPos<tam){
         if(pPos<num_paginas){
@@ -308,6 +387,11 @@ Elemento Lista_Paginada::recorrer(int pPos) {
 }
 
 
+/**
+ * @brief Metodo encargado de eliminar un elemento en una posicion dada de la lista.
+ * @param pPos posicion del elemento que se desea eliminar
+ * @see removerAlInicio,removerAlFinal
+ */
 void Lista_Paginada::remover(int pPos) {
     if(pPos>=0 && pPos<tam){
         if(tam<=num_paginas){
@@ -356,6 +440,13 @@ void Lista_Paginada::remover(int pPos) {
     }
 }
 
+/**
+ * @brief Metodo encargado de cambiar la posicion en el eje Y de un elemento de la lista.
+ * @param pPos posicion del elemento en la lista.
+ * @param nueva posicion en el eje Y del elemento.
+ * @see Elemento
+ * @see escritura
+ */
 void Lista_Paginada::setPosY(int pPos, int pPosY) {
     if(pPos>=0 && pPos<tam){
         if(pPos<num_paginas){
@@ -375,6 +466,11 @@ void Lista_Paginada::setPosY(int pPos, int pPosY) {
     }
 }
 
+/**
+ * @brief Metodo encargado de cambiar el atributo resistencia de un objeto de tipo Elemento en la lista.
+ * @param pPos posicion del elemento en la lista.
+ * @param ataque numero que se le restara a la resistencia del objeto.
+ */
 bool Lista_Paginada::bajarResistencia(int pPos,int ataque) {
     if(pPos>=0 && pPos<tam){
         if(pPos<num_paginas){
@@ -408,12 +504,21 @@ bool Lista_Paginada::bajarResistencia(int pPos,int ataque) {
     }
 }
 
+/**
+ * @brief Metodo encargado de mostrar la informacion contenida en cada nodo de la lista.
+ * @see recorrer
+ */
 void Lista_Paginada::imprimir() {
     for(int i=0;i<tam;i++){
         cout<<recorrer(i).info()<<endl;
     }
 }
-
+/**
+ * @brief Metodo encargado de leer una linea del archivo de texto
+ * @param linea numero de linea que se desea leer;
+ * @param caracter char que representa las lineas que han sido borradas
+ * @return un puntero de tipo Elemento
+ */
 Elemento* Lista_Paginada::lecturaPTR(int linea, string caracter) {
     fstream archivo(nom_archivo);
     string texto="";
@@ -443,10 +548,14 @@ Elemento* Lista_Paginada::lecturaPTR(int linea, string caracter) {
         return new BalaTorre(resist,posicX,posicY);
     }else if(id=="BM"){
         return new BalaMisil(resist,posicX,posicY);
+    }else if(id=="MN"){
+        return new Mina(resist,posicX,posicY);
     }else if(id=="JT"){
         return new Jet(resist,posicX,posicY);
     }else if(id=="JK"){
         return new JetKamikaze(resist,posicX,posicY);
+    }else if(id=="SC"){
+        return new Escolta(resist,posicX,posicY);
     }else if(id=="BD") {
         return new Bombardero(resist,posicX,posicY);
     }else if(id=="LS"){
@@ -461,6 +570,13 @@ Elemento* Lista_Paginada::lecturaPTR(int linea, string caracter) {
     }
 }
 
+/**
+ * @brief Metodo encargado de llamar la funcion moverse de la clase Elemento de todos los elementos de la lista.
+ * @param refX posicion de referencia en el eje X, usualmente corresponde a la del jugador
+ * @param refY posicion de referencia en el eje Y, usualmente corresponde a la del jugador.
+ * @see lecturaPTR
+ * @see Elemento
+ */
 void Lista_Paginada::moverse(int refX,int refY) {
 
     Nodo<Elemento>* pTemp=head;
@@ -479,8 +595,9 @@ void Lista_Paginada::moverse(int refX,int refY) {
                 ptr= new Bombardero(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
             }else if(pTemp->element.getID()=="MS"){
                 ptr= new Misil(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
-            }
-            else{
+            }else if(pTemp->element.getID()=="SC"){
+                ptr= new Escolta(pTemp->element.resistencia,pTemp->element.posX,pTemp->element.posY);
+            }else{
                 ptr=&pTemp->element;
             }
             ptr->moverse(refX,refY);
@@ -498,7 +615,12 @@ void Lista_Paginada::moverse(int refX,int refY) {
     delete ptr;
 }
 
-
+/**
+ * @brief Metodo encargado de llamar el metodo darPowerUp() de los objetos de tipo Elemento
+ * @param pPos posicion del elemento en la lista.
+ * @see lectura
+ * @see Elemento
+ */
 bool Lista_Paginada::darPowerUps(int pPos) {
     if(pPos>=0 && pPos<tam){
         bool respuesta=false;

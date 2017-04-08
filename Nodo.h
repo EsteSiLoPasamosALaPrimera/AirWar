@@ -5,6 +5,11 @@
 #ifndef AIRWAR_NODO_H
 #define AIRWAR_NODO_H
 
+
+/**
+ * @class Nodo
+ * @brief Clase generica que representa un nodo para un estructura enlazada simple
+ */
 template<typename E>
 class Nodo{
 public:
@@ -16,10 +21,14 @@ public:
     Nodo(E pElement,Nodo<E>* pNext=NULL);
 };
 
+/**
+ * @brief Constructor de la clase Nodo
+ */
 template<typename E>
 Nodo<E>::Nodo(E pElement, Nodo<E> *pNext) {
     element=pElement;
     next=pNext;
 }
+
 
 #endif //AIRWAR_NODO_H

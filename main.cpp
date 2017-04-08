@@ -3,11 +3,15 @@
 #include "allegro5/allegro_image.h"
 #include "allegro5/allegro_font.h"
 #include "allegro5/allegro_ttf.h"
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 
 #include "Lista_Paginada.h"
 #include "Jugador.h"
 #include "EnemyFactory.h"
 #include "Cola_Paginada.h"
+#include "Servidor.h"
+#include "Jefe.h"
 
 #define PANT_X 1300
 #define PANT_Y 690.0
@@ -19,8 +23,7 @@ enum MYKEYS {
 };
 using namespace std;
 
-
-int AirWarNivel(int nivel,const char* Nombre_Jug) {
+int AirWarNivel(int nivel,const char* Nombre_Jug, bool control) {
 
     ALLEGRO_DISPLAY *ventana = NULL;
     ALLEGRO_EVENT_QUEUE *eventos = NULL;
@@ -42,23 +45,28 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     ALLEGRO_BITMAP* img_aumentadisparos=NULL;
     ALLEGRO_BITMAP* img_escudo=NULL;
     ALLEGRO_BITMAP* img_campo=NULL;
+    ALLEGRO_BITMAP* img_jefe=NULL;
+    ALLEGRO_BITMAP* img_mina=NULL;
+    ALLEGRO_BITMAP* img_escolta=NULL;
     ALLEGRO_BITMAP* fondo=NULL;
 
     ALLEGRO_FONT* font=NULL;
-
+    ALLEGRO_FONT* font_clear=NULL;
 
     bool key[4] = {false, false, false, false};
     bool redraw = true;
 
     al_init();
     al_init_image_addon();
-    al_install_keyboard();
+    if(control){
+        al_install_keyboard();
+    }
     al_init_font_addon();
     al_init_ttf_addon();
 
     timer = al_create_timer(1.0/FPS);
-    timer_torres=al_create_timer(6);
-    timer_naves=al_create_timer(3);
+    timer_torres=al_create_timer(3);
+    timer_naves=al_create_timer(1);
     ventana = al_create_display(PANT_X, PANT_Y);
     eventos = al_create_event_queue();
 
@@ -74,19 +82,25 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     img_jugador=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/jugador1.png");
     img_laser=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/laser1.png");
     img_misil=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/misil1.png");
-    if(nivel==1){
+    img_mina=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/mina.png");
+    img_escolta=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/escolta.png");
+
+    if(nivel%3==1){
         fondo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/Nivel1.png");
-    }else if(nivel==2){
+        img_jefe=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/boss1.png");
+    }else if(nivel%3==2){
         fondo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/Nivel2.png");
+        img_jefe=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/boss2.png");
     }else{
         fondo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/Nivel3.png");
+        img_jefe=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/boss3.png");
     }
     img_escudo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/escudo.png");
     img_campo=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/shield3.png");
-    img_aumentadisparos=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/bullet2.png");
+    img_aumentadisparos=al_load_bitmap("/home/alfredo/Inicio/Documentos/Imágenes/aumento.png");
 
     font=al_load_ttf_font("/home/alfredo/Inicio/Documentos/28 Days Later.ttf",18,0);
-
+    font_clear=al_load_ttf_font("/home/alfredo/Inicio/Documentos/28 Days Later.ttf",42,0);
 
     al_register_event_source(eventos, al_get_display_event_source(ventana));
     al_register_event_source(eventos, al_get_timer_event_source(timer));
@@ -101,11 +115,15 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     al_start_timer(timer_naves);
 
     Jugador jugador;
+    Jefe boss(nivel);
+    Servidor servidor;
+    if(!control){
+        servidor.inicializar();
+    }
     EnemyFactory fabrica;
-    Lista_Paginada torres("/home/alfredo/Inicio/Documentos/torres.txt");
-    Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",2);
-    Lista_Paginada naves("/home/alfredo/Inicio/Documentos/Naves.txt",2);
-   // Lista_Paginada balas_naves("/home/alfredo/Inicio/Documentos/balasNaves.txt",2);
+    Lista_Paginada torres("/home/alfredo/Inicio/Documentos/torres.txt",5);
+    Lista_Paginada balas_enemigas("/home/alfredo/Inicio/Documentos/balasTorre.txt",5);
+    Lista_Paginada naves("/home/alfredo/Inicio/Documentos/Naves.txt",5);
 
     int pasosTorre=0;
     int pasosNaves=0;
@@ -113,39 +131,74 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     float tiempo_final=0;
     float posYFondo=-1900;
 
-    while (true) {
+    bool presentacion=true;
+
+    while (control || servidor.server>0) {
         ALLEGRO_EVENT ev;
         al_wait_for_event(eventos, &ev);
         if (ev.type == ALLEGRO_EVENT_TIMER) {
             if (ev.timer.source == timer) {
-                if (key[KEY_UP]) {
-                    jugador.desplazar(1);
-                }
-                if (key[KEY_DOWN]) {
-                    jugador.desplazar(2);
-                }
-                if (key[KEY_LEFT]) {
-                    jugador.desplazar(4);
-                }
-                if (key[KEY_RIGHT]) {
-                    jugador.desplazar(3);
+                if(control){
+                    if (key[KEY_UP]) {
+                        jugador.desplazar(1);
+                    }
+                    if (key[KEY_DOWN]) {
+                        jugador.desplazar(2);
+                    }
+                    if (key[KEY_LEFT]) {
+                        jugador.desplazar(4);
+                    }
+                    if (key[KEY_RIGHT]) {
+                        jugador.desplazar(3);
+                    }
+                }else{
+                    recv(servidor.server, servidor.buffer, servidor.bufsize, 0);
+                    string dir=reinterpret_cast<const char*>(servidor.buffer);
+                    cout<<"Mensaje original: "<<dir<<endl;
+                    while(dir.find('+')==1){
+                        string msj_b=dir.substr(0,dir.find('+'));
+                        if(msj_b=="U"){
+                            jugador.desplazar(1);
+                        }else if(msj_b=="D"){
+                            jugador.desplazar(2);
+                        }else if(msj_b=="L"){
+                            jugador.desplazar(4);
+                        }else if(msj_b=="R"){
+                            jugador.desplazar(3);
+                        }else if(msj_b=="S"){
+                            jugador.agregarBala();
+                        }
+                        dir=dir.substr(dir.find('+')+1);
+                    }
+                    std::fill_n(servidor.buffer, servidor.bufsize, 0);
                 }
                 redraw = true;
                 tiempo_final+=(1.0/FPS);
                 if(posYFondo<0){
                     posYFondo+=10*(1.0/FPS);
+                }else{
+                    al_stop_timer(timer_torres);
+                    al_stop_timer(timer_naves);
+                    if(torres.tam>0 || naves.tam>0){
+                        while(torres.tam>0){
+                            torres.remover(torres.tam-1);
+                        }
+                        while(naves.tam>0){
+                            naves.remover(naves.tam-1);
+                        }
+                    }
                 }
             }
             else if(ev.timer.source==timer_torres){
                 torres.insertar(torres.tam-1,fabrica.getTorreEnemiga());
-            }else{
+            }else if(ev.timer.source==timer_naves){
                 naves.insertar(naves.tam-1,fabrica.getNaveEnemiga());
             }
         }
         else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
             break;
         }
-        else if (ev.type == ALLEGRO_EVENT_KEY_DOWN) {
+        else if (control && ev.type == ALLEGRO_EVENT_KEY_DOWN ) {
             switch (ev.keyboard.keycode) {
                 case ALLEGRO_KEY_UP:
                     key[KEY_UP] = true;
@@ -164,7 +217,7 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                     break;
             }
         }
-        else if (ev.type == ALLEGRO_EVENT_KEY_UP) {
+        else if (control && ev.type == ALLEGRO_EVENT_KEY_UP) {
             switch (ev.keyboard.keycode) {
                 case ALLEGRO_KEY_UP:
                     key[KEY_UP] = false;
@@ -199,30 +252,63 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                 case ALLEGRO_KEY_E:
                     jugador.usarPowerUp();
                     break;
+                case ALLEGRO_KEY_T:
+                    jugador.invulnerable+=120;
+                    break;
             }
         }
         if (redraw && al_is_event_queue_empty(eventos)) {
             if(jugador.vidas<=0){
+                al_draw_textf(font_clear , al_map_rgb(200 , 10 , 100) , 550 , 350 , ALLEGRO_ALIGN_CENTRE , "FIN DEL JUEGO");
+                al_flip_display();
+                al_rest(2);
                 break;
             }
             redraw = false;
             al_clear_to_color(al_map_rgb(0, 0, 0));
             al_draw_bitmap(fondo,0,posYFondo,0);
             if(jugador.modo=="BA"){
-                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 270 , ALLEGRO_ALIGN_CENTRE , "AMMO\nINF");
-                al_draw_bitmap(img_bala,1240,240,0);
+                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 340 , ALLEGRO_ALIGN_CENTRE , "AMMO\nINF");
+                al_draw_bitmap(img_bala,1240,310,0);
             }else if(jugador.modo=="MS"){
-                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 270 , ALLEGRO_ALIGN_CENTRE , "AMMO %d",jugador.ammo_misil);
-                al_draw_bitmap(img_misil,1240,240,0);
+                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 340 , ALLEGRO_ALIGN_CENTRE , "AMMO %d",jugador.ammo_misil);
+                al_draw_bitmap(img_misil,1240,310,0);
             }else if(jugador.modo=="LS"){
-                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 270 , ALLEGRO_ALIGN_CENTRE , "AMMO %d",jugador.ammo_laser);
-                al_draw_bitmap(img_laser,1240,240,0);
+                al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 340 , ALLEGRO_ALIGN_CENTRE , "AMMO %d",jugador.ammo_laser);
+                al_draw_bitmap(img_laser,1240,310,0);
             }
             al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 30 , ALLEGRO_ALIGN_CENTRE , "TIME %.2f" ,tiempo_final);
             al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 100 , ALLEGRO_ALIGN_CENTRE , "VIDAS %d" , jugador.vidas);
             al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 170 , ALLEGRO_ALIGN_CENTRE , "SCORE %d" , jugador.puntaje);
-            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 370 , ALLEGRO_ALIGN_CENTRE , "POWER\n\nUPS");
+            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 440 , ALLEGRO_ALIGN_CENTRE , "POWER-UPS");
+            al_draw_textf(font , al_map_rgb(200 , 10 , 100) , 1250 , 240 , ALLEGRO_ALIGN_CENTRE , "Nivel %d",nivel);
             al_draw_bitmap(img_jugador, jugador.posX, jugador.posY, 0);
+
+
+
+            if(posYFondo>=0){
+                al_draw_bitmap(img_jefe,boss.posX,boss.posY,0);
+                boss.moverse(0,0);
+                if(pasosTorre==50){
+                    balas_enemigas.insertar(balas_enemigas.tam-1,BalaMisil(0,boss.posX-100,boss.posY+100));
+                    balas_enemigas.insertar(balas_enemigas.tam-1,BalaMisil(0,boss.posX+100,boss.posY+100));
+                }else if(pasosTorre>=100){
+                    pasosTorre=0;
+                    balas_enemigas.insertar(balas_enemigas.tam-1,BalaTorre(0,boss.posX-100,boss.posY+100));
+                    balas_enemigas.insertar(balas_enemigas.tam-1,BalaTorre(0,boss.posX+100,boss.posY+100));
+                }
+                jugador.detectarColisionJefe(boss);
+                boss=jugador.detectarColisionBalasJefe(boss);
+                pasosTorre++;
+                if(boss.resistencia<0){
+                    al_draw_textf(font_clear , al_map_rgb(200 , 10 , 100) , 550 , 350 , ALLEGRO_ALIGN_CENTRE , "NIVEL COMPLETADO");
+                    al_flip_display();
+                    al_rest(2);
+                    break;
+                }
+            }else if(posYFondo<0 && posYFondo>=-100){
+                al_draw_textf(font_clear , al_map_rgb(200 , 10 , 100) , 550 , 350 , ALLEGRO_ALIGN_CENTRE , "JEFE EN CAMINO");
+            }
 
             if(jugador.invulnerable>0){
                 jugador.invulnerable-=(1.0/FPS);
@@ -232,13 +318,13 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
             }
             if(jugador.powerUps.tam>0){
                 if(jugador.powerUps.head->element.getID()=="AD"){
-                    al_draw_bitmap(img_aumentadisparos,1240,340,0);
+                    al_draw_bitmap(img_aumentadisparos,1240,410,0);
                 }else if(jugador.powerUps.head->element.getID()=="AL"){
-                    al_draw_bitmap(img_laser,1240,340,0);
+                    al_draw_bitmap(img_laser,1240,410,0);
                 }else if(jugador.powerUps.head->element.getID()=="AM"){
-                    al_draw_bitmap(img_misil,1240,340,0);
+                    al_draw_bitmap(img_misil,1240,410,0);
                 }else{
-                    al_draw_bitmap(img_escudo,1240,340,0);
+                    al_draw_bitmap(img_escudo,1240,410,0);
                 }
             }
             if(jugador.balas.tam>0){
@@ -262,6 +348,8 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                         al_draw_bitmap(img_torre,tTemp.posX,tTemp.posY,0);
                     }else if(tTemp.getID()=="TM"){
                         al_draw_bitmap(img_torremisil,tTemp.posX,tTemp.posY,0);
+                    }else if(tTemp.getID()=="MN"){
+                        al_draw_bitmap(img_mina,tTemp.posX,tTemp.posY,0);
                     }else if(tTemp.getID()=="AD"){
                         al_draw_bitmap(img_aumentadisparos,tTemp.posX,tTemp.posY,0);
                     }else if(tTemp.getID()=="AM"){
@@ -283,7 +371,12 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                 jugador.detectarColisionBalas(torres);
                 jugador.detectarColisionJugador(torres,50);
                 for(int i=0;i<torres.tam;i++){
-                    if(torres.recorrer(i).posY>=PANT_Y || torres.recorrer(i).posY<0){
+                    if(torres.recorrer(i).posY<0 || torres.recorrer(i).posY>=PANT_Y){
+                        if(torres.recorrer(i).getID()=="MN"){
+                            balas_enemigas.insertar(balas_enemigas.tam-1,BalaMisil(0,550,0));
+                            balas_enemigas.insertar(balas_enemigas.tam-1,BalaMisil(0,600,0));
+                            balas_enemigas.insertar(balas_enemigas.tam-1,BalaMisil(0,650,0));
+                        }
                         torres.remover(i);
                     }
                 }
@@ -308,6 +401,11 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                         if(pasosNaves>=50){
                             balas_enemigas.insertar(0,BalaMisil(nav.posX,nav.posX,nav.posY));
                         }
+                    }else if(nav.getID()=="SC"){
+                        al_draw_bitmap(img_escolta,nav.posX,nav.posY,0);
+                        if(pasosNaves>=50){
+                            balas_enemigas.insertar(0,BalaMisil(nav.posX,nav.posX,nav.posY));
+                        }
                     }else if(nav.getID()=="AD"){
                         al_draw_bitmap(img_aumentadisparos,nav.posX,nav.posY,0);
                     }else if(nav.getID()=="AM"){
@@ -322,7 +420,7 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
                 jugador.detectarColisionJugador(naves,50);
                 jugador.detectarColisionBalas(naves);
                 for(int c=0;c<naves.tam;c++){
-                    if(naves.recorrer(c).posY>=PANT_Y){
+                    if(naves.recorrer(c).posY>=PANT_Y || naves.recorrer(c).posY<0){
                         naves.remover(c);
                     }
                 }
@@ -354,6 +452,31 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
             al_flip_display();
         }
     }
+    if(!control){
+
+        while (!servidor.isExit){
+            cout << "\nServer: ";
+            do {
+                //cin >> buffer;
+                //send(server, buffer, bufsize, 0);
+                if (*servidor.buffer == '#') {
+                    //send(server, buffer, bufsize, 0);
+                    *servidor.buffer = '*';
+                    servidor.isExit = true;
+                }
+            } while (*servidor.buffer != '*');
+        }
+        cout<< "\n\n=> Connection terminated with IP "<< inet_ntoa(servidor.server_addr.sin_addr);
+        close(servidor.server);
+        close(servidor.client);
+        cout<< "\nGoodbye..."<< endl;
+        servidor.isExit = false;
+        exit(1);
+        cout<< "adios"<<endl;
+        close(servidor.client);
+
+    }
+
     al_destroy_timer(timer);
     al_destroy_timer(timer_naves);
     al_destroy_timer(timer_torres);
@@ -369,9 +492,13 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
     al_destroy_bitmap(img_misil);
     al_destroy_bitmap(img_escudo);
     al_destroy_bitmap(img_campo);
+    al_destroy_bitmap(img_mina);
+    al_destroy_bitmap(img_escolta);
     al_destroy_bitmap(img_aumentadisparos);
     al_destroy_bitmap(fondo);
+    al_destroy_bitmap(img_jefe);
     al_destroy_font(font);
+    al_destroy_font(font_clear);
     al_destroy_event_queue(eventos);
     al_destroy_display(ventana);
 
@@ -380,7 +507,7 @@ int AirWarNivel(int nivel,const char* Nombre_Jug) {
 
 int main(int argc, char* argv[]){
 
-    AirWarNivel(3,"Partida de Alfredo");
+    AirWarNivel(1,"Partida de Alfredo",true);
     return 0;
 
 }

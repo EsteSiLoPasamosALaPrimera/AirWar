@@ -9,6 +9,11 @@
 
 using namespace std;
 
+
+/**
+ * @class Elemento
+ * @brief Clase base de los elementos que deben ser representados en la interfaz grafica.
+ */
 class Elemento{
 public:
     int posX;
@@ -33,6 +38,11 @@ protected:
 
 };
 
+
+/**
+ * @brief Constructor de la clase Elemento
+ * Inicializa todos los atributos necesarios para representar el objeto graficamente.
+ */
 Elemento::Elemento() {
     posX=posY=0;
     ataque=0;
@@ -41,6 +51,12 @@ Elemento::Elemento() {
     puntaje=0;
 }
 
+/**
+ * @brief Metodo que cambia el numero de caracteres que tiene un string.
+ * @param txt variable de tipo string sobre la cual se realiza la operacion.
+ * @param max nuevo tamaño que tendra el string.
+ * @return el nuevo string con el tamaño modificado
+ */
 string Elemento::fillString(string txt,int max) {
     while(txt.size()<max){
         txt="0"+txt;
@@ -51,6 +67,12 @@ string Elemento::fillString(string txt,int max) {
     return txt;
 }
 
+
+/**
+ * @brief Metodo que descarga la informacion de un objeto de tipo Elemento en un archivo de texto.
+ * @param iteracion valor booleano que indica si se debe reiniciar el contenido del archivo o solo agregar al final.
+ * @param nomArchivo nombre y direccion del archivo donde se realizara la descarga.
+ */
 void Elemento::descargar(bool iteracion,string nomArchivo) {
 
     string infor=id+";"+fillString(to_string(resistencia),5)+";"+fillString(to_string(posX),5)+";"+fillString(to_string(posY),5)+";\n";
@@ -65,17 +87,33 @@ void Elemento::descargar(bool iteracion,string nomArchivo) {
     }
 }
 
+/**
+ * @brief Destructor de la clase Elemento.
+ */
 Elemento::~Elemento() {
 }
 
+/**
+ * @brief Metodo que encapsula en un string los atributos principales de un objeto de tipo Elemento.
+ * @return string con la informacion del objeto.
+ * @see fillString
+ */
 string Elemento::info() {
     string infor=id+";"+fillString(to_string(resistencia),5)+";"+fillString(to_string(posX),5)+";"+fillString(to_string(posY),5)+";";
     return infor;
 }
-
+/**
+ * @brief Metodo que devuelve el atributo id del objeto.
+ * @return un string con el id del objeto.
+ */
 string Elemento::getID() {
     return id;
 }
+
+/**
+ * brief Metodo que aletoriamente define si un objeto de tipo Elemento debe ser tratado como un power-up por la logica del juego o no.
+ * @return true si el objeto se "convirtio en un power up" o false en caso contrario.
+ */
 bool Elemento::darPowerUp() {
     switch(rand()%2){
         case 0:

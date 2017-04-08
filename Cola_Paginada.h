@@ -11,6 +11,11 @@
 #include "JetKamikaze.h"
 #include "Bombardero.h"
 
+/**
+ * @class Cola Paginada
+ * @brief Estructura de datos de tipo cola, que utiliza paginacion.
+ */
+
 class Cola_Paginada{
 public:
     Nodo<Elemento>* head;
@@ -31,8 +36,17 @@ private:
     void insertarAlFinal(Elemento elemento);
 };
 
+/**
+ * @brief Constructor de la clase Cola_Paginada
+ * @see Elemento
+ */
 Cola_Paginada::Cola_Paginada() { }
 
+/**
+ * @brief Constructor de la clase Cola_Paginada
+ * @param nomArchivo nombre del archivo donde se realizara la descarga de datos.
+ * @param numPag cantidad maxima de nodos que puede tener la cola cargada en memoria.
+ */
 Cola_Paginada::Cola_Paginada(string nomArchivo,int numPag) {
     head=tail=NULL;
     tam=0;
@@ -43,6 +57,11 @@ Cola_Paginada::Cola_Paginada(string nomArchivo,int numPag) {
     num_paginas=numPag;
 }
 
+
+/**
+ * @brief Metodo que carga la informacion guardada en un archivo de texto a memoria.
+ * El metodo cambia el elemento del ultimo nodo por el leido del archivo.
+ */
 void Cola_Paginada::carga() {
     fstream archivo(nom_archivo);
     string texto="";
@@ -74,6 +93,11 @@ void Cola_Paginada::carga() {
     }
 }
 
+/**
+ * @brief Metodo encargado de almacenar la informacion contenida en un objeto de tipo Elemento en un archivo de texto.
+ * @see Elemento
+ */
+
 void Cola_Paginada::descarga(Elemento elemento) {
     if(validar){
         fstream archivo(nom_archivo);
@@ -88,6 +112,11 @@ void Cola_Paginada::descarga(Elemento elemento) {
     tam++;
 }
 
+/**
+ * @brief Metodo que insertar un elemento al final de la cola.
+ * @param elemento objeto de tipo Elemento que se almacenara en el nodo.
+ * @see Elemento
+ */
 void Cola_Paginada::insertarAlFinal(Elemento elemento) {
     if(tam==0){
         head=tail=new Nodo<Elemento>(elemento);
@@ -98,6 +127,13 @@ void Cola_Paginada::insertarAlFinal(Elemento elemento) {
     tam++;
 }
 
+
+/**
+ * @brief Metodo que inserta un objeto de tipo Elemento en la cola siguiendo FIFO.
+ * @param elemento objeto de tipo Elemento que se insertara en la cola.
+ * @see insertarAlFinal
+ * @see Elemento
+ */
 void Cola_Paginada::insertar(Elemento elemento) {
     if(tam>=num_paginas){
         descarga(elemento);
@@ -106,6 +142,11 @@ void Cola_Paginada::insertar(Elemento elemento) {
     }
 }
 
+
+/**
+ * @brief metodo que elimina de la cola el primer elemento.
+ * @see carga
+ */
 void Cola_Paginada::remover() {
     if(head!=NULL){
         if(tam>num_paginas){
